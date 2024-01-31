@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.sakaiproject.grading.api.model.Gradebook;
 import org.sakaiproject.samigo.api.SamigoReferenceReckoner;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
@@ -737,7 +739,6 @@ public class PublishedAssessmentService extends AssessmentService{
     }
 
     PublishedEvaluationModel evaluation = (PublishedEvaluationModel) assessment.getEvaluationModel();
-    //Integer scoringType = EvaluationModelIfc.HIGHEST_SCORE;
     if (evaluation == null) {
       evaluation = new PublishedEvaluationModel();
       evaluation.setAssessmentBase(assessment);
@@ -747,8 +748,32 @@ public class PublishedAssessmentService extends AssessmentService{
     GradebookServiceHelper gbsHelper = IntegrationContextFactory.getInstance().getGradebookServiceHelper();
     if (StringUtils.equalsAny(evaluation.getToGradeBook(), EvaluationModelIfc.TO_DEFAULT_GRADEBOOK.toString(), EvaluationModelIfc.TO_SELECTED_GRADEBOOK.toString())) {
 
-      String assessmentName = TextFormat.convertPlaintextToFormattedTextNoHighUnicode(assessment.getTitle().trim());
-      boolean gbItemExists = gbsHelper.isAssignmentDefined(assessmentName, gradingService);
+      PublishedAssessmentService publishedAssessmentService = new PublishedAssessmentService();
+      PublishedAssessmentFacade assessmentFacade = publishedAssessmentService.getPublishedAssessment(String.valueOf(assessment.getPublishedAssessmentId()));
+      PublishedAssessmentData data = (PublishedAssessmentData) assessmentFacade.getData();
+
+      List<Gradebook> gbList = gradingService.getGradebookGroupInstances(AgentFacade.getCurrentSiteId());
+      List<String> existingGradebookUids = gbList.stream().map(Gradebook::getUid).collect(Collectors.toList());
+
+      List<String> selectedGradebookUids = new ArrayList<>();
+      Map<String, String> groupMap = assessmentFacade.getReleaseToGroups();
+      List<String> selectedGroups = groupMap.keySet().stream().collect(Collectors.toList());
+
+      if (existingGradebookUids.containsAll(selectedGroups)) {
+        selectedGradebookUids.addAll(selectedGroups);
+      }
+
+      String title = StringEscapeUtils.unescapeHtml4(assessment.getTitle());
+      String siteId = AgentFacade.getCurrentSiteId();
+
+      boolean gbItemExists = true;
+
+      for (String selectedGbUid : selectedGradebookUids) {
+        if (!gradingService.isAssignmentDefined(selectedGbUid, siteId, title)) {
+          gbItemExists = false;
+        }
+      }
+
 
       try {
         if (StringUtils.equals(evaluation.getToGradeBook(), EvaluationModelIfc.TO_DEFAULT_GRADEBOOK.toString())) {
@@ -759,7 +784,16 @@ public class PublishedAssessmentService extends AssessmentService{
                 gbsHelper.updateGradebook(assessment, gradingService);
             } else {
                 log.warn("Gradebook item does not exist for assessment {}, creating a new gradebook item", assessment.getAssessmentId());
-                gbsHelper.addToGradebook(assessment, null, gradingService);
+                // TODO JUANMA ?? - sustituir null for gradebook uids obtenidos de la property
+                boolean isGradebookGroupEnabled = gradingService.isGradebookGroupEnabled(AgentFacade.getCurrentSiteId());
+
+                if (isGradebookGroupEnabled) {
+                  for (String gUid : selectedGradebookUids) {
+                    gbsHelper.addToGradebook(gUid, data,  data.getCategoryId(), gradingService);
+                  }
+                } else {
+                  gbsHelper.addToGradebook(GradebookFacade.getGradebookUId(), data, data.getCategoryId(), gradingService);
+                }
             }
         }
 

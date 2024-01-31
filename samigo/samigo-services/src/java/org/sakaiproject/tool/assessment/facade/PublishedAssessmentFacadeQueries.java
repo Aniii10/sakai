@@ -46,6 +46,7 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.grading.api.model.Gradebook;
 import org.sakaiproject.rubrics.api.RubricsConstants;
 import org.sakaiproject.rubrics.api.RubricsService;
 import org.sakaiproject.samigo.api.SamigoReferenceReckoner;
@@ -726,7 +727,6 @@ public class PublishedAssessmentFacadeQueries extends HibernateDaoSupport implem
 
 	public PublishedAssessmentFacade publishAssessment(
 			AssessmentFacade assessment) throws Exception {
-
 		PublishedAssessmentData publishedAssessment = preparePublishedAssessment(
 				(AssessmentData) assessment.getData());
 
@@ -777,6 +777,9 @@ public class PublishedAssessmentFacadeQueries extends HibernateDaoSupport implem
 						"org.sakaiproject.grading.api.GradingService");
 			}
 
+			// write authorization
+			createAuthorization(publishedAssessment);
+
 			GradebookServiceHelper gbsHelper = IntegrationContextFactory
 					.getInstance().getGradebookServiceHelper();
 
@@ -786,7 +789,13 @@ public class PublishedAssessmentFacadeQueries extends HibernateDaoSupport implem
                     String ref = SamigoReferenceReckoner.reckoner().site(site.getId()).subtype("p")
                                     .id(publishedAssessmentFacade.getPublishedAssessmentId().toString()).reckon().getReference();
                     publishedAssessment.setReference(ref);
-					gbsHelper.addToGradebook(publishedAssessment, publishedAssessment.getCategoryId(), g);
+
+					Map groupsForSite = getGroupsForSite(AgentFacade.getCurrentSiteId());
+					Map<String, String> groupMap = getReleaseToGroups(groupsForSite, publishedAssessment.getPublishedAssessmentId());
+					List<String> selectedGroups = groupMap.keySet().stream().collect(Collectors.toList());
+
+					gbsHelper.buildItemToGradebook(publishedAssessment, selectedGroups, null, g);
+
 				} catch (Exception e) {
 					log.error("Removing published assessment: " + e);
 					delete(publishedAssessment);
@@ -795,8 +804,7 @@ public class PublishedAssessmentFacadeQueries extends HibernateDaoSupport implem
 			}
 		}
 
-		// write authorization
-		createAuthorization(publishedAssessment);
+
 		return publishedAssessmentFacade;
 	}
 

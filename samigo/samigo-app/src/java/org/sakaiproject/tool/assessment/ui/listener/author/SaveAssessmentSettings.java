@@ -91,7 +91,6 @@ public class SaveAssessmentSettings
     assessment.setTitle(TextFormat.convertPlaintextToFormattedTextNoHighUnicode(assessmentSettings.getTitle()));
     assessment.setDescription(assessmentSettings.getDescription());
     assessment.updateAssessmentMetaData(AssessmentMetaDataIfc.AUTHORS, TextFormat.convertPlaintextToFormattedTextNoHighUnicode(assessmentSettings.getAuthors()));
-
     // #2 - set AssessmentAccessControl
     AssessmentAccessControl control = (AssessmentAccessControl)assessment.getAssessmentAccessControl();
     if (control == null){
@@ -294,15 +293,15 @@ public class SaveAssessmentSettings
 			evaluation.setToGradeBook(Integer.toString(EvaluationModelIfc.NOT_TO_GRADEBOOK));
 		}
 	}
-    
+
     if (assessmentSettings.getScoringType()!=null)
       evaluation.setScoringType(new Integer(assessmentSettings.getScoringType()));
     assessment.setEvaluationModel(evaluation);
 
     // Add category unless unassigned (-1) is selected or defaulted. CategoryId comes
     // from the web page as a string representation of a the long cat id.
-    if (!StringUtils.equals(assessmentSettings.getCategorySelected(), "-1")) {
-		assessment.setCategoryId(Long.parseLong((assessmentSettings.getCategorySelected())));
+    if (!StringUtils.equals(assessmentSettings.getCategorySelected(), "-1") && !StringUtils.isEmpty(assessmentSettings.getCategorySelected())) {
+		  assessment.setCategoryId(Long.parseLong((assessmentSettings.getCategorySelected())));
     }
 
     // h. update ValueMap: it contains value for teh checkboxes in

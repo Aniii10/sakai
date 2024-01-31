@@ -21,6 +21,8 @@
 
 package org.sakaiproject.tool.assessment.ui.listener.author;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.time.Instant;
 
 import javax.faces.application.FacesMessage;
@@ -45,6 +48,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.grading.api.model.Gradebook;
 import org.sakaiproject.samigo.api.SamigoAvailableNotificationService;
 import org.sakaiproject.samigo.api.SamigoReferenceReckoner;
 import org.sakaiproject.samigo.util.SamigoConstants;
@@ -966,7 +970,6 @@ implements ActionListener
                     return false;
                 }
             } else {
-
                 try {
                     log.debug("before gbsHelper.addToGradebook()");
 
@@ -980,7 +983,8 @@ implements ActionListener
                         Site site = SiteService.getSite(ToolManager.getCurrentPlacement().getContext());
                         String ref = SamigoReferenceReckoner.reckoner().site(site.getId()).subtype("p").id(assessment.getPublishedAssessmentId().toString()).reckon().getReference();
                         data.setReference(ref);
-                        gbsHelper.addToGradebook(data, newCategory, gradingService);
+
+                        gbsHelper.buildItemToGradebook(data, Arrays.asList(assessmentSettings.getGroupsAuthorized()), newCategory, gradingService);
                     }
 
                     // any score to copy over? get all the assessmentGradingData and copy over
