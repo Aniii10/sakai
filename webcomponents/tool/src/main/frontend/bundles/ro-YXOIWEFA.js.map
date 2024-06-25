@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/pagination/translations/ro.js"],
+  "sourcesContent": ["export default {\n  label: 'Navigare \u00EEn pagin\u0103',\n  previous: 'Pagin\u0103 anterioar\u0103',\n  next: 'Pagin\u0103 urm\u0103toare',\n  page: 'Pagina {page}',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,MAAO,6BACP,SAAU,8BACV,KAAM,6BACN,KAAM,eACR",
+  "names": ["ro_default"]
+}

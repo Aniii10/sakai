@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/pagination/translations/hu.js"],
+  "sourcesContent": ["export default {\n  label: 'Oldalnavig\u00E1ci\u00F3',\n  previous: 'El\u0151z\u0151 oldal',\n  next: 'K\u00F6vetkez\u0151 oldal',\n  page: '{page}. oldal',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,MAAO,uBACP,SAAU,wBACV,KAAM,0BACN,KAAM,eACR",
+  "names": ["hu_default"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/pagination/translations/es.js"],
+  "sourcesContent": ["export default {\n  label: 'Navegaci\u00F3n de la p\u00E1gina',\n  previous: 'P\u00E1gina anterior',\n  next: 'P\u00E1gina siguiente',\n  page: 'P\u00E1gina {page}',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,MAAO,gCACP,SAAU,qBACV,KAAM,sBACN,KAAM,kBACR",
+  "names": ["es_default"]
+}

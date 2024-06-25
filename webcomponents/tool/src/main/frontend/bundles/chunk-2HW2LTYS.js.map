@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@sakai-ui/sakai-portal-utils/src/sakai-portal-utils.js"],
+  "sourcesContent": ["export const getUserId = () => window.top?.portal?.user?.id || \"\";\nexport const getSiteId = () => window.top?.portal?.siteId || \"\";\nexport const getUserLocale = () => (window.top?.portal?.locale || window.top?.sakai?.locale?.userLocale || \"en-US\").replace(\"_\", \"-\");\nexport const getOffsetFromServerMillis = () => window.top?.portal?.user.offsetFromServerMillis || 0;\nexport const getTimezone = () => window.top?.portal?.user.timezone || \"\";\nexport const getServiceName = () => window.top?.portal?.serviceName || \"Sakai\";\nexport const setupSearch = options => window.top?.portal?.search?.setup(options);\n"],
+  "mappings": "AAAO,IAAMA,EAAY,IAAM,OAAO,KAAK,QAAQ,MAAM,IAAM,GAClDC,EAAY,IAAM,OAAO,KAAK,QAAQ,QAAU,GAChDC,EAAgB,KAAO,OAAO,KAAK,QAAQ,QAAU,OAAO,KAAK,OAAO,QAAQ,YAAc,SAAS,QAAQ,IAAK,GAAG,EAE7H,IAAMC,EAAc,IAAM,OAAO,KAAK,QAAQ,KAAK,UAAY,GACzDC,EAAiB,IAAM,OAAO,KAAK,QAAQ,aAAe,QAC1DC,EAAcC,GAAW,OAAO,KAAK,QAAQ,QAAQ,MAAMA,CAAO",
+  "names": ["getUserId", "getSiteId", "getUserLocale", "getTimezone", "getServiceName", "setupSearch", "options"]
+}

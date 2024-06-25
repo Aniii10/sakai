@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/pagination/translations/zh.js"],
+  "sourcesContent": ["export default {\n  label: '\u9875\u9762\u5BFC\u822A',\n  previous: '\u4E0A\u4E00\u9875',\n  next: '\u4E0B\u4E00\u9875',\n  page: '\u9875 {page}',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,MAAO,2BACP,SAAU,qBACV,KAAM,qBACN,KAAM,eACR",
+  "names": ["zh_default"]
+}

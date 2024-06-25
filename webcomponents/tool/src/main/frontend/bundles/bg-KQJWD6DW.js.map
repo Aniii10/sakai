@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/ui/components/calendar/translations/bg.js"],
+  "sourcesContent": ["export default {\n  nextMonth: '\u0421\u043B\u0435\u0434\u0432\u0430\u0449 \u043C\u0435\u0441\u0435\u0446',\n  previousMonth: '\u041F\u0440\u0435\u0434\u0438\u0448\u0435\u043D \u043C\u0435\u0441\u0435\u0446',\n  nextFullYear: '\u0421\u043B\u0435\u0434\u0432\u0430\u0449 \u0433\u043E\u0434\u0438\u043D\u0430',\n  previousFullYear: '\u041F\u0440\u0435\u0434\u0438\u0448\u0435\u043D \u0433\u043E\u0434\u0438\u043D\u0430',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,UAAW,4EACX,cAAe,kFACf,aAAc,kFACd,iBAAkB,uFACpB",
+  "names": ["bg_default"]
+}

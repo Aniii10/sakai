@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/ui/components/calendar/translations/de.js"],
+  "sourcesContent": ["export default {\n  nextMonth: 'N\u00E4chster Monat',\n  previousMonth: 'Vorheriger Monat',\n  nextFullYear: 'N\u00E4chstes Jahr',\n  previousFullYear: 'Vorheriges Jahr',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,UAAW,oBACX,cAAe,mBACf,aAAc,mBACd,iBAAkB,iBACpB",
+  "names": ["de_default"]
+}

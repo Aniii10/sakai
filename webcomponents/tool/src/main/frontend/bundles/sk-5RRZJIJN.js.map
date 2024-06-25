@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/ui/components/calendar/translations/sk.js"],
+  "sourcesContent": ["export default {\n  nextMonth: 'Nasleduj\u00FAci mesiac',\n  previousMonth: 'Predch\u00E1dzaj\u00FAci mesiac',\n  nextFullYear: 'Nasleduj\u00FAci rok',\n  previousFullYear: 'Predch\u00E1dzaj\u00FAci rok',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,UAAW,wBACX,cAAe,8BACf,aAAc,qBACd,iBAAkB,0BACpB",
+  "names": ["sk_default"]
+}

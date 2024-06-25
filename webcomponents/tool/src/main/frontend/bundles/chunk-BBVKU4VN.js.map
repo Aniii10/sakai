@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@sakai-ui/sakai-date-picker/sakai-date-picker.js"],
+  "sourcesContent": ["import { SakaiDatePicker } from \"./src/SakaiDatePicker.js\";\n\n!customElements.get(\"sakai-date-picker\") && customElements.define(\"sakai-date-picker\", SakaiDatePicker);\n"],
+  "mappings": "wCAEA,CAAC,eAAe,IAAI,mBAAmB,GAAK,eAAe,OAAO,oBAAqBA,CAAe",
+  "names": ["SakaiDatePicker"]
+}

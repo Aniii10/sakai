@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@sakai-ui/sakai-icon/sakai-icon.js"],
+  "sourcesContent": ["import { SakaiIcon } from './src/SakaiIcon.js';\n\n!customElements.get(\"sakai-icon\") && customElements.define(\"sakai-icon\", SakaiIcon);\n"],
+  "mappings": "wCAEA,CAAC,eAAe,IAAI,YAAY,GAAK,eAAe,OAAO,aAAcA,CAAS",
+  "names": ["SakaiIcon"]
+}

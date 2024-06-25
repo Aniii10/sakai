@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/ui/components/calendar/translations/ru.js"],
+  "sourcesContent": ["export default {\n  nextMonth: '\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u043C\u0435\u0441\u044F\u0446',\n  previousMonth: '\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0438\u0439 \u043C\u0435\u0441\u044F\u0446',\n  nextFullYear: '\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0433\u043E\u0434',\n  previousFullYear: '\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0438\u0439 \u0433\u043E\u0434',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,UAAW,wFACX,cAAe,8FACf,aAAc,4EACd,iBAAkB,iFACpB",
+  "names": ["ru_default"]
+}

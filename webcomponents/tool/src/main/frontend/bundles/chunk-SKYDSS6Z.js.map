@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@sakai-ui/sakai-editor/sakai-editor.js"],
+  "sourcesContent": ["import { SakaiEditor } from \"./src/SakaiEditor.js\";\n\ncustomElements.define(\"sakai-editor\", SakaiEditor);\n"],
+  "mappings": "wCAEA,eAAe,OAAO,eAAgBA,CAAW",
+  "names": ["SakaiEditor"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../node_modules/@lion/ui/components/calendar/translations/zh.js"],
+  "sourcesContent": ["export default {\n  nextMonth: '\u4E0B\u4E00\u4E2A\u6708',\n  previousMonth: '\u524D\u4E00\u4E2A\u6708',\n  nextFullYear: '\u660E\u4E00\u5E74',\n  previousFullYear: '\u524D\u4E00\u5E74',\n};\n"],
+  "mappings": "4BAAA,IAAOA,EAAQ,CACb,UAAW,2BACX,cAAe,2BACf,aAAc,qBACd,iBAAkB,oBACpB",
+  "names": ["zh_default"]
+}

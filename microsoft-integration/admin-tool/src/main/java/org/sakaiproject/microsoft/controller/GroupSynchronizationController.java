@@ -16,7 +16,6 @@
 package org.sakaiproject.microsoft.controller;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.sakaiproject.microsoft.api.MicrosoftCommonService;
 import org.sakaiproject.microsoft.api.MicrosoftConfigurationService;
 import org.sakaiproject.microsoft.api.MicrosoftSynchronizationService;
-import org.sakaiproject.microsoft.api.SakaiProxy;
 import org.sakaiproject.microsoft.api.data.MicrosoftChannel;
 import org.sakaiproject.microsoft.api.exceptions.MicrosoftGenericException;
 import org.sakaiproject.microsoft.api.model.GroupSynchronization;
@@ -80,7 +78,8 @@ public class GroupSynchronizationController {
 	private static final String EDIT_GROUP_SYNCH_TEMPLATE = "editGroupSynchronization";
 
 	private static final String NEW = "NEW";
-
+	private static final int MAX_CHANNELS = 30;
+	
 	@GetMapping(value = {"/editGroupSynchronization/{siteSynchronizationId}"})
 	public String editGroupSynchronization(@PathVariable String siteSynchronizationId, Model model, RedirectAttributes redirectAttributes) throws MicrosoftGenericException {
 		SiteSynchronization ss = microsoftSynchronizationService.getSiteSynchronization(SiteSynchronization.builder().id(siteSynchronizationId).build(), true);
