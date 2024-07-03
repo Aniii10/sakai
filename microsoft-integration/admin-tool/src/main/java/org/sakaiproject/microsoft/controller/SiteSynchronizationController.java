@@ -47,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * This is the controller used by Spring MVC to handle Group Synchronizations related requests
  *
+ *
  */
 @Slf4j
 @Controller
