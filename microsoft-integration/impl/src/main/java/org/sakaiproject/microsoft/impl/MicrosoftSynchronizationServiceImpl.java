@@ -510,7 +510,8 @@ public class MicrosoftSynchronizationServiceImpl implements MicrosoftSynchroniza
 				if(ss.getGroupSynchronizationsList() != null && ss.getGroupSynchronizationsList().size() > 0) {
 					int groupCounter = 0;
 						for (GroupSynchronization gs : ss.getGroupSynchronizationsList()) {
-							if(groupCounter < 3) {
+							microsoftCommonService.getTeam(ss.getTeamId());
+							if(groupCounter < MAX_CHANNELS) {
 								SynchronizationStatus aux_status = runGroupSynchronizationForced(ss, gs, mappedSakaiUserId, mappedMicrosoftUserId);
 								if (aux_status == SynchronizationStatus.ERROR_GUEST && ret != SynchronizationStatus.ERROR) {
 									//once ERROR status is set, do not check it again
@@ -519,6 +520,15 @@ public class MicrosoftSynchronizationServiceImpl implements MicrosoftSynchroniza
 								if (aux_status == SynchronizationStatus.ERROR) {
 									ret = SynchronizationStatus.ERROR;
 								}
+							} else {
+								//save log
+								microsoftLoggingRepository.save(MicrosoftLog.builder()
+										.event(MicrosoftLog.EVENT_REACH_MAX_CHANNELS)
+										.status((ret == SynchronizationStatus.OK) ? MicrosoftLog.Status.OK : MicrosoftLog.Status.KO)
+										.addData("teamId", ss.getTeamId())
+										.addData("groups", ss.getSite().getGroups().toString())
+										.build());
+								//break; ????
 							}
 							groupCounter++;
 						}
@@ -688,7 +698,8 @@ public class MicrosoftSynchronizationServiceImpl implements MicrosoftSynchroniza
 			if(ss.getGroupSynchronizationsList() != null && ss.getGroupSynchronizationsList().size() > 0) {
 				int groupCounter = 0;
 				for(GroupSynchronization gs : ss.getGroupSynchronizationsList()) {
-					if(groupCounter < 3) {
+					microsoftCommonService.getTeam(ss.getTeamId());
+					if(groupCounter < MAX_CHANNELS) {
 					SynchronizationStatus aux_status = runGroupSynchronization(ss, gs, guestUsers, mappedSakaiUserId, mappedMicrosoftUserId);
 					if(aux_status == SynchronizationStatus.ERROR_GUEST && ret != SynchronizationStatus.ERROR) {
 						//once ERROR status is set, do not check it again
