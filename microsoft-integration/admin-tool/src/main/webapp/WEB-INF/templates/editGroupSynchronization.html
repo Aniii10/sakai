@@ -38,7 +38,7 @@
 
 								<div class="col-sm-5" th:text="${channelsMap[entry.channelId]?.name} ?: '???'"></div>
 
-								<div class="col-sm-2 text-center" th:if="${entry.channelId != ''}">
+								<div class="col-sm-2 text-center">
 									<i role="button"
 									   th:id="|btn_${entry.id}|"
 									   class="fa fa-solid fa-trash"
