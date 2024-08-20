@@ -71,7 +71,13 @@ public class UserServiceSqlDefault implements UserServiceSql
 	 */
 	public String getUserWhereSql()
 	{
-		return "SAKAI_USER.TYPE != 'roleview' AND SAKAI_USER.USER_ID = SAKAI_USER_ID_MAP.USER_ID AND (SAKAI_USER.USER_ID = ? OR UPPER(EID) LIKE UPPER(?) OR EMAIL_LC LIKE ? OR UPPER(FIRST_NAME) LIKE UPPER(?) OR UPPER(LAST_NAME) LIKE UPPER(?))";
+		return "SAKAI_USER.TYPE != 'roleview' AND " +
+				"(SAKAI_USER.USER_ID = ? OR " +
+				"UPPER(SAKAI_USER_ID_MAP.EID) LIKE UPPER(?) OR " +
+				"EMAIL_LC LIKE ? OR " +
+				"UPPER(SAKAI_USER.FIRST_NAME) LIKE UPPER(?) OR " +
+				"UPPER(SAKAI_USER.LAST_NAME) LIKE UPPER(?) OR " +
+				"UPPER(SAKAI_USER_PROPERTY.VALUE) LIKE UPPER(?))";
 	}
 
 	/**

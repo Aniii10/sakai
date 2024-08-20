@@ -38,8 +38,10 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ValueChangeListener;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
+import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.tool.assessment.data.dao.assessment.PublishedAssessmentData;
 import org.sakaiproject.tool.assessment.data.dao.grading.AssessmentGradingData;
 import org.sakaiproject.tool.assessment.data.dao.grading.StudentGradingSummaryData;
@@ -57,6 +59,8 @@ import org.sakaiproject.tool.assessment.ui.listener.util.ContextUtil;
 import org.sakaiproject.tool.assessment.util.BeanSort;
 import org.sakaiproject.tool.assessment.integration.helper.ifc.AgentHelper;
 import org.sakaiproject.tool.assessment.integration.context.IntegrationContextFactory;
+import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiproject.user.api.UserNotDefinedException;
 
 /**
  * <p>Description: Action Listener for displaying Submission Status for anonymnous grading</p>
@@ -69,7 +73,10 @@ public class SubmissionStatusListener
 {
   //private static EvaluationListenerUtil util;
   private BeanSort bs;
-  //private static ContextUtil cu;
+  @Setter
+  private UserDirectoryService userDirectoryService;
+
+	//private static ContextUtil cu;
 
   /**
    * Standard process action method.
@@ -141,8 +148,10 @@ public class SubmissionStatusListener
     try
     {
       TotalScoreListener totalScorelistener = new TotalScoreListener();
+	  userDirectoryService = ComponentManager.get(org.sakaiproject.user.api.UserDirectoryService.class);
 
-      GradingService delegate =	new GradingService();
+
+		GradingService delegate =	new GradingService();
 
       if (ContextUtil.lookupParam("sortBy") != null &&
           !ContextUtil.lookupParam("sortBy").trim().equals(""))
@@ -238,6 +247,9 @@ public class SubmissionStatusListener
         results.setAgentEid(agent.getEidString());
         results.setAgentDisplayId(agent.getDisplayIdString());
         results.setRole((String)userRoles.get(agentid));
+		results.setWorkingPlace(userDirectoryService.getUser(agentid).getProperties().getProperty("Working Place"));
+		results.setPosition(userDirectoryService.getUser(agentid).getProperties().getProperty("Position"));
+		results.setFirm(userDirectoryService.getUser(agentid).getProperties().getProperty("Firm"));
         results.setRetakeAllowed(getRetakeAllowed(agent.getIdString(), studentGradingSummaryDataMap, retakeAssessment));
         if (useridMap.containsKey(agentid) ) {
           agents.add(results);
@@ -290,15 +302,17 @@ public class SubmissionStatusListener
 	} catch (InvocationTargetException e) {
 		log.error(e.getMessage(), e);
 		return false;
+	} catch (UserNotDefinedException e) {
+		throw new RuntimeException(e);
 	}
 
-    return true;
+	  return true;
   }
 
 
   //add those students that have not submitted scores, need to display them
   // in the UI 
-  public void prepareNotSubmittedAgentResult(Iterator notsubmitted_iter, List agents, Map userRoles, RetakeAssessmentBean retakeAssessment, Map studentGradingSummaryDataMap){
+  public void prepareNotSubmittedAgentResult(Iterator notsubmitted_iter, List agents, Map userRoles, RetakeAssessmentBean retakeAssessment, Map studentGradingSummaryDataMap) throws UserNotDefinedException {
     while (notsubmitted_iter.hasNext()){
       String studentid = (String) notsubmitted_iter.next();
       AgentResults results = new AgentResults();
@@ -324,7 +338,10 @@ public class SubmissionStatusListener
       results.setAgentEid(agent.getEidString());
       results.setAgentDisplayId(agent.getDisplayIdString());
       results.setRole((String)userRoles.get(studentid));
-      results.setRetakeAllowed(getRetakeAllowed(agent.getIdString(), studentGradingSummaryDataMap, retakeAssessment));
+	  results.setWorkingPlace(userDirectoryService.getUser(studentid).getProperties().getProperty("Working Place"));
+	  results.setPosition(userDirectoryService.getUser(studentid).getProperties().getProperty("Position"));
+	  results.setFirm(userDirectoryService.getUser(studentid).getProperties().getProperty("Firm"));
+	  results.setRetakeAllowed(getRetakeAllowed(agent.getIdString(), studentGradingSummaryDataMap, retakeAssessment));
       retakeAssessment.setStudentGradingSummaryDataMap(studentGradingSummaryDataMap);
       agents.add(results);
     }

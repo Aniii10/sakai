@@ -56,10 +56,10 @@ public class AgentResults
     implements Serializable
 {
   /**
-	 * 
+	 *
 	 */
-	private static final long serialVersionUID = 2820488402465439395L;
-	
+  private static final long serialVersionUID = 2820488402465439395L;
+
   private Long assessmentGradingId;
   private Long itemGradingId;
   private String agentId;
@@ -71,6 +71,9 @@ public class AgentResults
   private String email;
   private String idString;
   private String role;
+  private String workingPlace;
+  private String position;
+  private String firm;
   private PublishedAssessmentIfc publishedAssessment;
   private Date submittedDate;
   private Date attemptDate;
@@ -182,11 +185,9 @@ public class AgentResults
   public String getEmail() {
     return Validator.check(email,"");
   }
-  
   public void setEmail(String email) {
-	this.email = email;
+    this.email = email;
   }
-  
   public String getIdString() {
     String escapedIdString =  ContextUtil.escapeApostrophe(idString);
     return Validator.check(escapedIdString, "N/A");
@@ -202,6 +203,30 @@ public class AgentResults
 
   public void setRole(String newrole) {
     role = newrole;
+  }
+
+  public String getWorkingPlace() {
+    return Validator.check(workingPlace, "N/A");
+  }
+
+  public void setWorkingPlace(String newWorkingPlace) {
+    workingPlace = newWorkingPlace;
+  }
+
+  public String getPosition() {
+    return Validator.check(position, "N/A");
+  }
+
+  public void setPosition(String position) {
+    this.position = position;
+  }
+
+  public String getFirm() {
+    return Validator.check(firm, "N/A");
+  }
+
+  public void setFirm(String firm) {
+    this.firm = firm;
   }
 
   public Date getSubmittedDate() {
@@ -233,7 +258,6 @@ public class AgentResults
   public String getTotalAutoScore() {
     return getExactTotalAutoScore();
   }
-  
   public String getExactTotalAutoScore() {
 	    return Validator.check(totalAutoScore, "0").replace(',', '.');
   }
@@ -241,7 +265,8 @@ public class AgentResults
   public String getRoundedTotalAutoScore() {
    if (totalAutoScore!= null){
 	   try {
-		   String newscore = ContextUtil.getRoundedValue(totalAutoScore.replace(',', '.'), 2);
+		   String newscore = ContextUtil.getRoundedValue(totalAutoScore.replace(',', '.'),
+2);
 		   return Validator.check(newscore, "N/A").replace(',', '.');
 	   }
 	   catch (Exception e) {
@@ -257,7 +282,6 @@ public class AgentResults
 	public void setRoundedTotalAutoScore(String roundedTotalAutoScore) {
 		this.setTotalAutoScore(roundedTotalAutoScore);
 	}
-  
   public void setTotalAutoScore(String totalAutoScore) {
 	  if (totalAutoScore!= null){
 		  this.totalAutoScore = totalAutoScore.replace(',', '.');
@@ -266,7 +290,6 @@ public class AgentResults
 		  this.totalAutoScore = null;
 	  }
   }
-  
   public String getTotalOverrideScore() {
     return Validator.check(totalOverrideScore, "0").replace(',', '.');
   }
@@ -285,7 +308,6 @@ public class AgentResults
 			return Validator.check(totalOverrideScore, "0").replace(',', '.');
 		}
 	}
-  
   public void setTotalOverrideScore(String totalOverrideScore) {
     if (totalOverrideScore!= null){
     	this.totalOverrideScore = totalOverrideScore.replace(',', '.');
@@ -300,7 +322,8 @@ public class AgentResults
   public String getRoundedFinalScore() {
 	  if (finalScore!= null){
 		  try {
-			  String newscore = ContextUtil.getRoundedValue(finalScore.replace(',', '.'), 2);
+			  String newscore = ContextUtil.getRoundedValue(finalScore.replace(',', '.'),
+2);
 			  return Validator.check(newscore, "N/A");
 		  }
 		  catch (Exception e) {
@@ -326,7 +349,6 @@ public class AgentResults
   public void setAnswer(String answer) {
     this.answer = answer;
   }
-  
   public String getAnswerKey() {
 	return answerKey;
   }
@@ -402,41 +424,41 @@ public class AgentResults
     this.rationale= param;
   }
 
-	public boolean getRetakeAllowed() {
-		return this.retakeAllowed;
-	}
-	public void setRetakeAllowed(boolean retakeAllowed) {
-		this.retakeAllowed = retakeAllowed;
-	}
-	
-	public Boolean getIsAutoSubmitted() {
-		return this.isAutoSubmitted;
-	}
-	
-	public void setIsAutoSubmitted(Boolean isAutoSubmitted) {
-		this.isAutoSubmitted = isAutoSubmitted;
-	}
-	
-	public boolean getIsAttemptDateAfterDueDate() {
-		return this.isAttemptDateAfterDueDate;
-	}
-	
-	public void setIsAttemptDateAfterDueDate(boolean isAttemptDateAfterDueDate) {
-		this.isAttemptDateAfterDueDate = isAttemptDateAfterDueDate;
-	}
+  public boolean getRetakeAllowed() {
+    return this.retakeAllowed;
+  }
+  public void setRetakeAllowed(boolean retakeAllowed) {
+    this.retakeAllowed = retakeAllowed;
+  }
 
-	public ItemGradingData getItemGrading() {
-		return this.itemGrading;
-	}
-	public void setItemGrading(ItemGradingData itemGrading) {
-		this.itemGrading = itemGrading;
-	}
-	
-	public List getItemGradingAttachmentList() {
-		return itemGradingAttachmentList;
-	}
+  public Boolean getIsAutoSubmitted() {
+    return this.isAutoSubmitted;
+  }
 
-	public void setItemGradingAttachmentList(List attachmentList)
+  public void setIsAutoSubmitted(Boolean isAutoSubmitted) {
+    this.isAutoSubmitted = isAutoSubmitted;
+  }
+
+  public boolean getIsAttemptDateAfterDueDate() {
+    return this.isAttemptDateAfterDueDate;
+  }
+
+  public void setIsAttemptDateAfterDueDate(boolean isAttemptDateAfterDueDate) {
+    this.isAttemptDateAfterDueDate = isAttemptDateAfterDueDate;
+  }
+
+  public ItemGradingData getItemGrading() {
+    return this.itemGrading;
+  }
+  public void setItemGrading(ItemGradingData itemGrading) {
+    this.itemGrading = itemGrading;
+  }
+
+  public List getItemGradingAttachmentList() {
+    return itemGradingAttachmentList;
+  }
+
+  public void setItemGradingAttachmentList(List attachmentList)
 	{
 		this.itemGradingAttachmentList = attachmentList;
 	}
@@ -447,7 +469,7 @@ public class AgentResults
 			this.hasItemGradingAttachment = true;
 		return this.hasItemGradingAttachment;
 	}
-	
+
 	public String addAttachmentsRedirect() {
 
 		// 1. redirect to add attachment
@@ -459,7 +481,7 @@ public class AgentResults
 			}
 			ToolSession currentToolSession = SessionManager.getCurrentToolSession();
 			currentToolSession.setAttribute(FilePickerHelper.FILE_PICKER_ATTACHMENTS, filePickerList);
-			  
+
 			currentToolSession.setAttribute("itemGradingId", itemGradingId);
 			ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 			context.redirect("sakai.filepicker.helper/tool");
@@ -468,14 +490,14 @@ public class AgentResults
 		}
 		return "sakai.filepicker.helper";
 	}
-	
+
 	public AssessmentGradingData getAssessmentGrading() {
 		return this.assessmentGrading;
 	}
 	public void setAssessmentGrading(AssessmentGradingData assessmentGrading) {
 		this.assessmentGrading = assessmentGrading;
 	}
-	
+
 	public List<AssessmentGradingAttachment> getAssessmentGradingAttachmentList() {
 		return assessmentGradingAttachmentList;
 	}
@@ -491,20 +513,24 @@ public class AgentResults
 			this.hasAssessmentGradingAttachment = true;
 		return this.hasAssessmentGradingAttachment;
 	}
-	
+
 	public String addAssessmentAttachmentsRedirect() {
 		  // 1. redirect to add attachment
 		  try	{
 			  List<Reference> filePickerList = new ArrayList<>();
 			  if (assessmentGradingAttachmentList != null){
 				  AttachmentUtil attachmentUtil = new AttachmentUtil();
-				  filePickerList = attachmentUtil.prepareReferenceList(assessmentGradingAttachmentList);
+				  filePickerList =
+attachmentUtil.prepareReferenceList(assessmentGradingAttachmentList);
 			  }
 			  ToolSession currentToolSession = SessionManager.getCurrentToolSession();
-			  currentToolSession.setAttribute(FilePickerHelper.FILE_PICKER_ATTACHMENTS, filePickerList);
-			  
-			  currentToolSession.setAttribute("assessmentGradingId", assessmentGradingId);
-			  ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+			  currentToolSession.setAttribute(FilePickerHelper.FILE_PICKER_ATTACHMENTS,
+filePickerList);
+
+			  currentToolSession.setAttribute("assessmentGradingId",
+assessmentGradingId);
+			 ExternalContext context =
+FacesContext.getCurrentInstance().getExternalContext();
 			  context.redirect("sakai.filepicker.helper/tool");
 		  }
 		  catch(Exception e){
@@ -512,7 +538,7 @@ public class AgentResults
 		  }
 		  return "sakai.filepicker.helper";
 	  }
-	
+
 	public Integer getTimeElapsed() {
 		return this.timeElapsed;
 	}
@@ -520,7 +546,6 @@ public class AgentResults
 	public void setTimeElapsed(Integer timeElapsed) {
 		this.timeElapsed = timeElapsed;
 	}
-	
 	public String getFormattedTimeElapsed() {
 	    String timeElapsedInString = "n/a";
 	    if (this.timeElapsed!=null && this.timeElapsed >0)
@@ -528,7 +553,7 @@ public class AgentResults
 	      int totalSec = this.timeElapsed;
 	      timeElapsedInString = TimeUtil.getFormattedTime(totalSec);
 	    }
-	    return timeElapsedInString;	
+	    return timeElapsedInString;
 	}
 
     public String getAgentDisplayId() {
@@ -538,13 +563,13 @@ public class AgentResults
     public void setAgentDisplayId(String agentDisplayId) {
         this.agentDisplayId = agentDisplayId;
     }
-    
+
     public void setAlternativeInstructorReviewUrl(String url) {
         this.alternativeInstructorReviewUrl = url;
-    }
+	}
 
-    public String getAlternativeInstructorReviewUrl() {
-        return alternativeInstructorReviewUrl;
-    }
+	public String getAlternativeInstructorReviewUrl() {
+		return alternativeInstructorReviewUrl;
+	}
 
 }

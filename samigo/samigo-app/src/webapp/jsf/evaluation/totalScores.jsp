@@ -572,7 +572,6 @@ function showLoadingMessage() {
       </f:facet>
         <h:outputText value="#{description.agentDisplayId}" />
     </h:column>
- 
 
     <!-- ROLE -->
     <h:column rendered="#{totalScores.sortType ne 'role'}">
@@ -613,7 +612,128 @@ function showLoadingMessage() {
       </f:facet>
        <h:outputText value="#{description.role}" />
     </h:column>
-    
+
+
+    <!-- WORKING PLACE -->
+     <h:column rendered="#{totalScores.sortType ne 'workingPlace'}">
+         <f:facet name="header" >
+            <h:commandLink title="#{evaluationMessages.t_sortWorkingPlace}" id="workingPlace" action="totalScores">
+              <h:outputText value="#{evaluationMessages.working_place}" />
+            <f:actionListener
+               type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+            <f:param name="sortBy" value="workingPlace" />
+            <f:param name="sortAscending" value="true"/>
+            </h:commandLink>
+         </f:facet>
+            <h:outputText value="#{description.workingPlace}" />
+        </h:column>
+
+        <h:column rendered="#{totalScores.sortType=='workingPlace' && totalScores.sortAscending}">
+              <f:facet name="header">
+                <h:commandLink title="#{evaluationMessages.t_sortWorkingPlace}" action="totalScores">
+                  <h:outputText value="#{evaluationMessages.working_place}" />
+                  <f:param name="sortAscending" value="false" />
+                  <h:graphicImage alt="#{evaluationMessages.alt_sortWorkingPlaceDescending}" rendered="#{totalScores.sortAscending}" url="/images/sortascending.gif"/>
+                  <f:actionListener
+                     type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                  </h:commandLink>
+              </f:facet>
+               <h:outputText value="#{description.workingPlace}" />
+            </h:column>
+
+            <h:column rendered="#{totalScores.sortType=='workingPlace'  && !totalScores.sortAscending}">
+                  <f:facet name="header">
+                  <h:commandLink title="#{evaluationMessages.t_sortWorkingPlace}" action="totalScores">
+                    <h:outputText value="#{evaluationMessages.working_place}" />
+                    <f:param name="sortAscending" value="true"/>
+                    <h:graphicImage alt="#{evaluationMessages.alt_sortWorkingPlaceAscending}" rendered="#{!totalScores.sortAscending}" url="/images/sortdescending.gif"/>
+                    <f:actionListener
+                         type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                  </h:commandLink>
+                  </f:facet>
+                   <h:outputText value="#{description.workingPlace}" />
+                </h:column>
+
+     <!-- POSITION -->
+
+     <h:column rendered="#{totalScores.sortType ne 'position'}">
+              <f:facet name="header" >
+                 <h:commandLink title="#{evaluationMessages.t_sortPosition}" id="position" action="totalScores">
+                   <h:outputText value="#{evaluationMessages.position}" />
+                 <f:actionListener
+                    type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                 <f:param name="sortBy" value="position" />
+                 <f:param name="sortAscending" value="true"/>
+                 </h:commandLink>
+              </f:facet>
+                 <h:outputText value="#{description.position}" />
+             </h:column>
+
+        <h:column rendered="#{totalScores.sortType=='position' && totalScores.sortAscending}">
+                   <f:facet name="header">
+                     <h:commandLink title="#{evaluationMessages.t_sortPosition}" action="totalScores">
+                       <h:outputText value="#{evaluationMessages.position}" />
+                       <f:param name="sortAscending" value="false" />
+                       <h:graphicImage alt="#{evaluationMessages.alt_sortPositionDescending}" rendered="#{totalScores.sortAscending}" url="/images/sortascending.gif"/>
+                       <f:actionListener
+                          type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                       </h:commandLink>
+                   </f:facet>
+                    <h:outputText value="#{description.position}" />
+                 </h:column>
+
+        <h:column rendered="#{totalScores.sortType=='position'  && !totalScores.sortAscending}">
+                          <f:facet name="header">
+                          <h:commandLink title="#{evaluationMessages.t_sortPosition}" action="totalScores">
+                            <h:outputText value="#{evaluationMessages.position}" />
+                            <f:param name="sortAscending" value="true"/>
+                            <h:graphicImage alt="#{evaluationMessages.alt_sortPositionAscending}" rendered="#{!totalScores.sortAscending}" url="/images/sortdescending.gif"/>
+                            <f:actionListener
+                                 type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                          </h:commandLink>
+                          </f:facet>
+                           <h:outputText value="#{description.position}" />
+                        </h:column>
+
+      <!-- FIRM -->
+      <h:column rendered="#{totalScores.sortType ne 'firm'}">
+                    <f:facet name="header" >
+                       <h:commandLink title="#{evaluationMessages.t_sortFirm}" id="firm" action="totalScores">
+                         <h:outputText value="#{evaluationMessages.firm}" />
+                       <f:actionListener
+                          type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                       <f:param name="sortBy" value="firm" />
+                       <f:param name="sortAscending" value="true"/>
+                       </h:commandLink>
+                    </f:facet>
+                       <h:outputText value="#{description.firm}" />
+                   </h:column>
+
+      <h:column rendered="#{totalScores.sortType=='firm' && totalScores.sortAscending}">
+                         <f:facet name="header">
+                           <h:commandLink title="#{evaluationMessages.t_sortFirm}" action="totalScores">
+                             <h:outputText value="#{evaluationMessages.firm}" />
+                             <f:param name="sortAscending" value="false" />
+                             <h:graphicImage alt="#{evaluationMessages.alt_sortFirmDescending}" rendered="#{totalScores.sortAscending}" url="/images/sortascending.gif"/>
+                             <f:actionListener
+                                type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                             </h:commandLink>
+                         </f:facet>
+                          <h:outputText value="#{description.firm}" />
+                       </h:column>
+
+          <h:column rendered="#{totalScores.sortType=='firm'  && !totalScores.sortAscending}">
+                                   <f:facet name="header">
+                                   <h:commandLink title="#{evaluationMessages.t_sortFirm}" action="totalScores">
+                                     <h:outputText value="#{evaluationMessages.firm}" />
+                                     <f:param name="sortAscending" value="true"/>
+                                     <h:graphicImage alt="#{evaluationMessages.alt_sortFirmAscending}" rendered="#{!totalScores.sortAscending}" url="/images/sortdescending.gif"/>
+                                     <f:actionListener
+                                          type="org.sakaiproject.tool.assessment.ui.listener.evaluation.TotalScoreListener" />
+                                   </h:commandLink>
+                                   </f:facet>
+                                    <h:outputText value="#{description.firm}" />
+                                 </h:column>
 
     <!-- DATE -->
     <h:column rendered="#{totalScores.sortType!='submittedDate' && totalScores.allSubmissions!='4'}">

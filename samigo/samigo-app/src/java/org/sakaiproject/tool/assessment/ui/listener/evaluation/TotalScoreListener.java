@@ -43,6 +43,7 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ValueChangeListener;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -104,6 +105,9 @@ import org.sakaiproject.util.comparator.UserSortNameComparator;
   private BeanSort bs;
 
   private RubricsService rubricsService = ComponentManager.get(RubricsService.class);
+
+  @Setter
+  private org.sakaiproject.user.api.UserDirectoryService userDirectoryService;
 
   //private SectionAwareness sectionAwareness;
   // private List availableSections;
@@ -571,10 +575,11 @@ log.debug("totallistener: firstItem = " + bean.getFirstItem());
   }
 
   /* Dump the grading and agent information into AgentResults */
-  public void prepareAgentResult(PublishedAssessmentData p, Iterator iter, List agents, Map userRoles){
+  public void prepareAgentResult(PublishedAssessmentData p, Iterator iter, List agents, Map userRoles) throws UserNotDefinedException {
 	
 	TotalScoresBean bean = (TotalScoresBean) ContextUtil.lookupBean("totalScores");
 	Map agentResultsByAssessmentGradingIdMap = new HashMap();
+	userDirectoryService = ComponentManager.get(org.sakaiproject.user.api.UserDirectoryService.class);
 
     SecureDeliveryServiceAPI secureDelivery = SamigoApiFactory.getInstance().getSecureDeliveryServiceAPI();
     String moduleId = null;
@@ -699,8 +704,11 @@ log.debug("totallistener: firstItem = " + bean.getFirstItem());
       log.debug("testing agent getDisplayId agent.getdisplayid = " + agent.getDisplayIdString());
 
       results.setRole((String)userRoles.get(gdata.getAgentId()));
+	  results.setWorkingPlace(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty("Working Place"));
+	  results.setPosition(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty("Position"));
+	  results.setFirm(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty("Firm"));
 
-      List assessmentGradingAttachmentList = new ArrayList();
+	  List assessmentGradingAttachmentList = new ArrayList();
       assessmentGradingAttachmentList.addAll(gdata.getAssessmentGradingAttachmentList());
       results.setAssessmentGradingAttachmentList(assessmentGradingAttachmentList);
       
@@ -865,7 +873,7 @@ log.debug("totallistener: firstItem = " + bean.getFirstItem());
   // in the UI as well SAK-2234
   // students_not_submitted
   public void prepareNotSubmittedAgentResult(Iterator notsubmitted_iter,
-                                             List agents, Map userRoles){
+                                             List agents, Map userRoles) throws UserNotDefinedException {
 	log.debug("TotalScoreListener: prepareNotSubmittedAgentResult starts");
     while (notsubmitted_iter.hasNext()){
       String studentid = (String) notsubmitted_iter.next();
@@ -894,7 +902,10 @@ log.debug("totallistener: firstItem = " + bean.getFirstItem());
       results.setAgentEid(agent.getEidString());
       results.setAgentDisplayId(agent.getDisplayIdString());
       results.setRole((String)userRoles.get(studentid));
-      // use -1 to indicate this is an unsubmitted agent
+	  results.setWorkingPlace(userDirectoryService.getUser(studentid).getProperties().getProperty("Working Place"));
+	  results.setPosition(userDirectoryService.getUser(studentid).getProperties().getProperty("Position"));
+	  results.setFirm(userDirectoryService.getUser(studentid).getProperties().getProperty("Firm"));
+		// use -1 to indicate this is an unsubmitted agent
       results.setAssessmentGradingId(Long.valueOf(-1));
       results.setForGrade(Boolean.FALSE);
       results.setTotalAutoScore("-");

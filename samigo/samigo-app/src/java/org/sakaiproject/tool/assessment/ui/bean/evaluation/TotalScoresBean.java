@@ -1230,7 +1230,10 @@ public class TotalScoresBean implements Serializable, PhaseAware {
 				result.getLastName().toLowerCase().startsWith(pattern.toLowerCase()) ||
 				result.getAgentEid().toLowerCase().startsWith(pattern.toLowerCase()) ||
 				name1.toString().toLowerCase().startsWith(pattern.toLowerCase()) ||
-				name2.toString().toLowerCase().startsWith(pattern.toLowerCase())) {
+				name2.toString().toLowerCase().startsWith(pattern.toLowerCase()) ||
+                    (result.getWorkingPlace() != null && result.getWorkingPlace().toLowerCase().startsWith(pattern.toLowerCase())) ||
+                    (result.getPosition() != null && result.getPosition().toLowerCase().startsWith(pattern.toLowerCase())) ||
+                    (result.getFirm() != null && result.getFirm().toLowerCase().startsWith(pattern.toLowerCase()))) {
 				filteredList.add(result);
 			}
 		}

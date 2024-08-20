@@ -177,7 +177,7 @@ public abstract class DbUserService extends BaseUserDirectoryService
 
 	/**
 	 * Construct a Storage object.
-	 * 
+	 *
 	 * @return The new storage object.
 	 */
 	protected Storage newStorage()
@@ -300,14 +300,15 @@ public abstract class DbUserService extends BaseUserDirectoryService
 		public List search(String criteria, int first, int last)
 		{
 			String search = "%" + criteria + "%";
-			Object[] fields = new Object[5];
+			Object[] fields = new Object[6];
 			fields[0] = criteria;
 			fields[1] = search;
 			fields[2] = search.toLowerCase();
 			fields[3] = search;
 			fields[4] = search;
+			fields[5] = search;
 
-			List rv = super.getSelectedResources(userServiceSql.getUserWhereSql(), "SAKAI_USER_ID_MAP.EID", fields, first, last, "SAKAI_USER_ID_MAP");
+			List rv = super.getSelectedResources(userServiceSql.getUserWhereSql(), "SAKAI_USER_ID_MAP.EID", fields, first, last, "SAKAI_USER_ID_MAP, SAKAI_USER_PROPERTY");
 
 			return rv;
 		}
@@ -315,13 +316,14 @@ public abstract class DbUserService extends BaseUserDirectoryService
 		public int countSearch(String criteria)
 		{
 			String search = "%" + criteria + "%";
-			Object[] fields = new Object[5];
+			Object[] fields = new Object[6];
 			fields[0] = criteria;
 			fields[1] = search;
 			fields[2] = search.toLowerCase();
 			fields[3] = search;
 			fields[4] = search;
-			int rv = super.countSelectedResources(userServiceSql.getUserWhereSql(), fields, "SAKAI_USER_ID_MAP");
+			fields[5] = search;
+			int rv = super.countSelectedResources(userServiceSql.getUserWhereSql(), fields, "SAKAI_USER_ID_MAP, SAKAI_USER_PROPERTY");
 
 			return rv;
 		}
