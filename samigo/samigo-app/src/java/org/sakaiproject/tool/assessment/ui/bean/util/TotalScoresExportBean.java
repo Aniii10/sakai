@@ -68,6 +68,9 @@ public class TotalScoresExportBean implements Serializable {
 		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "first_name"));
 		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "uid"));
 		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "role"));
+		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "working_place"));
+		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "position"));
+		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "firm"));
 		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "submit_date"));
 		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "status"));
 		headerList.add(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE, "tot"));
@@ -149,6 +152,15 @@ public class TotalScoresExportBean implements Serializable {
 			cell.setCellValue(agent.getRole());
 
 			cell = createCell(row, (short)3, null);
+			cell.setCellValue(agent.getWorkingPlace() != null ? agent.getWorkingPlace() : "");
+
+			cell = createCell(row, (short)4, null);
+			cell.setCellValue(agent.getPosition() != null ? agent.getPosition() : "");
+
+			cell = createCell(row, (short)5, null);
+			cell.setCellValue(agent.getFirm() != null ? agent.getFirm() : "");
+
+			cell = createCell(row, (short)6, null);
 			Date date = agent.getSubmittedDate(); 
 			if (date!=null){
 				cell.setCellValue(date.toString());
@@ -156,19 +168,19 @@ public class TotalScoresExportBean implements Serializable {
 				cell.setCellValue(ContextUtil.getLocalizedString(EVALUATION_MESSAGES_BUNDLE,"no_submission"));
 			}
 
-			cell = createCell(row, (short)4, null);
+			cell = createCell(row, (short)7, null);
 			cell.setCellValue(agent.getStatus() != null ? agent.getStatus().toString(): "");
 
-			cell = createCell(row, (short)5, null);
+			cell = createCell(row, (short)8, null);
 			cell.setCellValue(agent.getTotalAutoScore());
 
-			cell = createCell(row, (short)6, null);
+			cell = createCell(row, (short)9, null);
 			cell.setCellValue(agent.getTotalOverrideScore());
 
-			cell = createCell(row, (short)7, null);
+			cell = createCell(row, (short)10, null);
 			cell.setCellValue(agent.getFinalScore());
 
-			cell = createCell(row, (short)8, null);
+			cell = createCell(row, (short)11, null);
 			cell.setCellValue(agent.getComments());
 		}
 		return wb;
