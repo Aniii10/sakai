@@ -54,7 +54,7 @@ export class SakaiRubricsSharedList extends SakaiRubricsList {
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <p>${this._i18n.confirm_remove.replace("{}", this.rubricTitleToDelete || "")}</p>
+              <p>${this._i18n.confirm_remove_public.replace("{}", this.rubricTitleToDelete || "")}</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" @click="${this.confirmDelete}">${this._i18n.remove_label}</button>
@@ -140,12 +140,12 @@ export class SakaiRubricsSharedList extends SakaiRubricsList {
     })
    .then(response => {
      if (!response.ok) {
-       throw new Error("Error en la solicitud:" + response.statusText);
+       throw new Error("Request Error:" + response.statusText);
      }
      return response.json();
    })
      .then(() => this.refreshPage())
-     .catch(error => console.error("Error en la solicitud:", error));
+     .catch(error => console.error("Request Error:", error));
   }
 
   sortRubrics(rubricType, ascending) {

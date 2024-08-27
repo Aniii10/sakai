@@ -73,7 +73,7 @@ export class SakaiRubricReadonly extends SakaiRubric {
           </div>
           <div class="action-container">
               <span class="d-none d-sm-none d-md-block visually-hidden">${this._i18n.delete_rubric}</span>
-              <span role="button" title="${this._i18n.remove.replace("{}", this.rubric.title)}" tabindex="0" class="fa fa-users" @click="${this.deleteShareRubric}"></span>
+              <span role="button" title="${this._i18n.revoke.replace("{}", this.rubric.title)}" tabindex="0" class="fa fa-users" @click="${this.deleteShareRubric}"></span>
           </div>
         </div>
       </div>
