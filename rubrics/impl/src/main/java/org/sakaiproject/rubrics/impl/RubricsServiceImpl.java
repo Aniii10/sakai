@@ -119,6 +119,8 @@ import com.lowagie.text.pdf.PdfWriter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityNotFoundException;
+
 @Slf4j
 @Setter
 @Transactional
@@ -293,6 +295,32 @@ public class RubricsServiceImpl implements RubricsService, EntityProducer, Entit
         return rubricRepository.findByShared(true).stream()
             .map(r -> decorateRubricBean(new RubricTransferBean(r))).collect(Collectors.toList());
     }
+
+    public void deleteSharedRubric(Long rubricId) {
+        Optional<Rubric> rubric = rubricRepository.findById(rubricId);
+        boolean rubricPublish = rubric.get().getShared();
+        if (rubric.isPresent() && rubric.get().getShared()) {
+            rubric.get().setShared(!rubricPublish);
+            associationRepository.findByRubricId(rubricId).forEach(ass ->
+                    evaluationRepository.deleteByToolItemRubricAssociation_Id(ass.getId())
+            );
+            rubricRepository.deleteById(rubricId);
+        } else {
+            throw new EntityNotFoundException("Shared rubric not found with id: " + rubricId);
+        }
+    }
+
+    public void unpublishSharedRubric(Long rubricId, Boolean published) {
+        Optional<Rubric> rubricOpt = rubricRepository.findById(rubricId);
+        if (rubricOpt.isPresent()) {
+            Rubric rubric = rubricOpt.get();
+            rubric.setShared(published);
+            rubricRepository.save(rubric);
+        } else {
+            throw new EntityNotFoundException("Shared rubric not found with id: " + rubricId);
+        }
+    }
+
 
     public void deleteRubric(Long rubricId) {
 

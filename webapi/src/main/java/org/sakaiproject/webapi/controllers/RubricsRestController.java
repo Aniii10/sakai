@@ -60,6 +60,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -272,6 +273,25 @@ public class RubricsRestController extends AbstractSakaiApiController {
         rubricsService.deleteRubric(rubricId);
         return ResponseEntity.ok().build();
 	}
+
+    @DeleteMapping("/rubrics/shared/{rubricId}")
+    public ResponseEntity<Void> deleteSharedRubric(@PathVariable Long rubricId, Principal principal) {
+
+        checkSakaiSession();
+
+        rubricsService.deleteSharedRubric(rubricId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/rubrics/published/{rubricId}")
+    public ResponseEntity<Void> unpublishSharedRubric(@PathVariable Long rubricId, @RequestBody Map<String, Boolean> updates) {
+        checkSakaiSession();
+
+        Boolean published = updates.get("published");
+
+        rubricsService.unpublishSharedRubric(rubricId, published);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping(value = "/sites/{siteId}/rubrics/{rubricId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<RubricTransferBean>> getRubric(@PathVariable String siteId, @PathVariable Long rubricId) throws Exception {

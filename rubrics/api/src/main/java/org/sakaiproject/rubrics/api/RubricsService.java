@@ -60,6 +60,10 @@ public interface RubricsService {
 
     void deleteRubric(Long rubricId);
 
+    void deleteSharedRubric(Long rubricId);
+
+    void unpublishSharedRubric(Long rubricId, Boolean published);
+
     Optional<CriterionTransferBean> createDefaultCriterion(String siteId, Long rubricId);
 
     Optional<CriterionTransferBean> createDefaultEmptyCriterion(String siteId, Long rubricId);
