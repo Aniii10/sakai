@@ -196,6 +196,57 @@ public class SiteComparator implements Comparator {
 			if (result == 0)
 				result = compareParticipantName((Participant) o1, (Participant) o2);
 			
+		} else if (m_criterion.equals(SiteConstants.SORTED_BY_PARTICIPANT_WORKINGPLACE)) {
+			String s1 = "";
+			if (o1.getClass().equals(Participant.class)) {
+				s1 = ((Participant) o1).getWorkingPlace();
+			}
+
+			String s2 = "";
+			if (o2.getClass().equals(Participant.class)) {
+				s2 = ((Participant) o2).getWorkingPlace();
+			}
+
+			result = compareString(s1, s2);
+
+			// secondary sort based on user name if necessary
+			if (result == 0)
+				result = compareParticipantName((Participant) o1, (Participant) o2);
+
+		} else if (m_criterion.equals(SiteConstants.SORTED_BY_PARTICIPANT_POSITION)) {
+			String s1 = "";
+			if (o1.getClass().equals(Participant.class)) {
+				s1 = ((Participant) o1).getPosition();
+			}
+
+			String s2 = "";
+			if (o2.getClass().equals(Participant.class)) {
+				s2 = ((Participant) o2).getPosition();
+			}
+
+			result = compareString(s1, s2);
+
+			// secondary sort based on user name if necessary
+			if (result == 0)
+				result = compareParticipantName((Participant) o1, (Participant) o2);
+
+		} else if (m_criterion.equals(SiteConstants.SORTED_BY_PARTICIPANT_FIRM)) {
+			String s1 = "";
+			if (o1.getClass().equals(Participant.class)) {
+				s1 = ((Participant) o1).getFirm();
+			}
+
+			String s2 = "";
+			if (o2.getClass().equals(Participant.class)) {
+				s2 = ((Participant) o2).getFirm();
+			}
+
+			result = compareString(s1, s2);
+
+			// secondary sort based on user name if necessary
+			if (result == 0)
+				result = compareParticipantName((Participant) o1, (Participant) o2);
+
 		} else if (m_criterion.equals(SiteConstants.SORTED_BY_PARTICIPANT_COURSE)) {
 			// sort by whether the site is joinable or not
 			String s1 = null;

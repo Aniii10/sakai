@@ -4,6 +4,9 @@
   <!-- Isolate locale-specific content -->
   <xsl:variable name="lang.name" select="'NAME'"/>
   <xsl:variable name="lang.id" select="'ID'"/>
+  <xsl:variable name="lang.workingPlace" select="'WORKING_PLACE'"/>
+  <xsl:variable name="lang.position" select="'POSITION'"/>
+  <xsl:variable name="lang.firm" select="'FIRM'"/>
   <xsl:variable name="lang.section" select="'SECTION'"/>
   <xsl:variable name="lang.cr" select="'CR'"/>
   <xsl:variable name="lang.role" select="'ROLE'"/>
@@ -11,6 +14,9 @@
 
 	<xsl:param name="titleName"/>
 	<xsl:param name="titleId"/>
+	<xsl:param name="titleWorkingPlace"/>
+	<xsl:param name="titlePosition"/>
+	<xsl:param name="titleFirm"/>
 	<xsl:param name="titleSection"/>
 	<xsl:param name="titleCredit"/>
 	<xsl:param name="titleRole"/>
@@ -114,6 +120,12 @@
 						<fo:table-column column-width="2in" />
 						<!-- id col -->
 						<fo:table-column column-width="1.15in" />
+						<!-- working place -->
+						<fo:table-column column-width="1.5in" />
+						<!-- position -->
+						<fo:table-column column-width="1in" />
+						<!-- firm -->
+						<fo:table-column column-width="1.5in" />
 						<!-- section col -->
 						<fo:table-column column-width="2.2in" />
 						<!-- credits col -->
@@ -132,6 +144,21 @@
 								<fo:table-cell  padding="2pt">
 									<fo:block>
 										<xsl:value-of select="$titleId"/>
+									</fo:block>
+								</fo:table-cell>
+								<fo:table-cell  padding="2pt">
+									<fo:block>
+										<xsl:value-of select="$titleWorkingPlace"/>
+									</fo:block>
+								</fo:table-cell>
+								<fo:table-cell  padding="2pt">
+									<fo:block>
+										<xsl:value-of select="$titlePosition"/>
+									</fo:block>
+								</fo:table-cell>
+								<fo:table-cell  padding="2pt">
+									<fo:block>
+										<xsl:value-of select="$titleFirm"/>
 									</fo:block>
 								</fo:table-cell>
 								<fo:table-cell  padding="2pt">
@@ -204,6 +231,13 @@
 		<fo:table-cell padding="2pt" white-space="nowrap">
 			<fo:block white-space="nowrap" wrap-option="wrap">
 				<xsl:value-of select="." />
+			</fo:block>
+		</fo:table-cell>
+	</xsl:template>
+	<xsl:template match="WORKING_PLACE | POSITION | FIRM" xmlns:fo="http://www.w3.org/1999/XSL/Format">
+		<fo:table-cell padding="2pt">
+			<fo:block white-space="nowrap" wrap-option="wrap">
+				<xsl:value-of select="."/>
 			</fo:block>
 		</fo:table-cell>
 	</xsl:template>

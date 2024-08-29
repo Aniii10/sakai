@@ -97,6 +97,9 @@ public class SiteInfoToolServlet extends HttpServlet
 	protected static final String PARTICIPANT_SECTIONS_NODE_NAME = "SECTIONS";
 	protected static final String PARTICIPANT_SECTION_NODE_NAME = "SECTION";
 	protected static final String PARTICIPANT_ID_NODE_NAME = "ID";
+	protected static final String PARTICIPANT_WORKING_PLACE_NODE_NAME = "WORKING_PLACE";
+	protected static final String PARTICIPANT_POSITION_NODE_NAME = "POSITION";
+	protected static final String PARTICIPANT_FIRM_NODE_NAME = "FIRM";
 	protected static final String PARTICIPANT_CREDITS_NODE_NAME = "CREDITS";
 	protected static final String PARTICIPANT_CREDIT_NODE_NAME = "CREDIT";
 	protected static final String PARTICIPANT_ROLE_NODE_NAME = "ROLE";
@@ -310,6 +313,16 @@ public class SiteInfoToolServlet extends HttpServlet
 				// display id
 				writeStringNodeToDom(doc, participantNode, PARTICIPANT_ID_NODE_NAME, StringUtils.trimToEmpty(participant.getDisplayId()));
 
+				// working place
+				writeStringNodeToDom(doc, participantNode, PARTICIPANT_WORKING_PLACE_NODE_NAME, StringUtils.trimToEmpty(participant.getWorkingPlace()));
+
+				// position
+				writeStringNodeToDom(doc, participantNode, PARTICIPANT_POSITION_NODE_NAME, StringUtils.trimToEmpty(participant.getPosition()));
+
+				// firm
+				writeStringNodeToDom(doc, participantNode, PARTICIPANT_FIRM_NODE_NAME, StringUtils.trimToEmpty(participant.getFirm()));
+
+
 				// sections
 				Element sectionsNode = doc.createElement(PARTICIPANT_SECTIONS_NODE_NAME);
 				for ( Iterator iSections = participant.getSectionEidList().iterator(); iSections.hasNext();)
@@ -341,8 +354,7 @@ public class SiteInfoToolServlet extends HttpServlet
 	}
 	
 	/**
-	 * Utility routine to write a string node to the DOM.
-	 * @param doc
+	 * Utility routine to write a string node to the DOM.* @param doc
 	 * @param parent
 	 * @param nodeName
 	 * @param nodeValue
@@ -414,6 +426,9 @@ public class SiteInfoToolServlet extends HttpServlet
 			Transformer transformer = transformerFactory.newTransformer(new StreamSource(in));
 			transformer.setParameter("titleName", rb.getString("sitegen.siteinfolist.title.name"));
 			transformer.setParameter("titleId", rb.getString("sitegen.siteinfolist.title.id"));
+			transformer.setParameter("titleWorkingPlace", rb.getString("sitegen.siteinfolist.title.workingPlace"));
+			transformer.setParameter("titlePosition", rb.getString("sitegen.siteinfolist.title.position"));
+			transformer.setParameter("titleFirm", rb.getString("sitegen.siteinfolist.title.firm"));
 			transformer.setParameter("titleSection", rb.getString("sitegen.siteinfolist.title.section"));
 			transformer.setParameter("titleCredit", rb.getString("sitegen.siteinfolist.title.credit"));
 			transformer.setParameter("titleRole", rb.getString("sitegen.siteinfolist.title.role"));

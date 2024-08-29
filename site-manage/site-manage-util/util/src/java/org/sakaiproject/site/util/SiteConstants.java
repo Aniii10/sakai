@@ -34,6 +34,12 @@ public class SiteConstants {
 
 	public static final String SORTED_BY_PARTICIPANT_UNIQNAME = "participant_uniqname";
 
+	public static final String SORTED_BY_PARTICIPANT_WORKINGPLACE = "participant_workingPlace";
+
+	public static final String SORTED_BY_PARTICIPANT_POSITION = "participant_position";
+
+	public static final String SORTED_BY_PARTICIPANT_FIRM = "participant_firm";
+
 	public static final String SORTED_BY_PARTICIPANT_ROLE = "participant_role";
 
 	public static final String SORTED_BY_PARTICIPANT_ID = "participant_id";

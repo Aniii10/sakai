@@ -350,7 +350,9 @@ public class SiteParticipantHelper {
 							participant.uniqname = userId;
 							participant.active=member.isActive();
 						}
-						
+						participant.setWorkingPlace();
+						participant.setPosition();
+						participant.setFirm();
 						conditionallyAddParticipantToMap(participantsMap, filterType, filterID, userId, participant, groupMembership);
 					}
 				} catch (UserNotDefinedException exception) {
@@ -431,6 +433,9 @@ public class SiteParticipantHelper {
 					participant.removeable = true;
 					participant.active = g.isActive();
 
+					participant.setWorkingPlace();
+					participant.setPosition();
+					participant.setFirm();
 					conditionallyAddParticipantToMap(participantsMap, filterType, filterID, userId, participant, groupMembership);
 				}
 			} catch (UserNotDefinedException e) {

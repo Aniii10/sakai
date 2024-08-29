@@ -33,6 +33,9 @@ public class Participant {
 
 	// Note: uniqname is really a user ID
 	public String uniqname = NULL_STRING;
+	public String workingPlace = NULL_STRING;
+	public String position = NULL_STRING;
+	public String firm = NULL_STRING;
 
 	public String role = NULL_STRING;
 
@@ -84,6 +87,27 @@ public class Participant {
 	public String getRole() {
 		return role;
 	} // cast to Role
+	public String getWorkingPlace() {
+		return workingPlace;
+	}
+	public void setWorkingPlace() throws UserNotDefinedException {
+		User user = UserDirectoryService.getUser(uniqname);
+		workingPlace = user.getProperties().getProperty("Working Place");
+	}
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition() throws UserNotDefinedException {
+		User user = UserDirectoryService.getUser(uniqname);
+		position = user.getProperties().getProperty("Position");
+	}
+	public String getFirm() {
+		return firm;
+	}
+	public void setFirm() throws UserNotDefinedException {
+		User user = UserDirectoryService.getUser(uniqname);
+		firm = user.getProperties().getProperty("Firm");
+	}
 
 	public String getProviderRole() {
 		return providerRole;

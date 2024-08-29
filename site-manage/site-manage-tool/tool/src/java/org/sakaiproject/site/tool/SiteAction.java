@@ -11372,7 +11372,11 @@ private Map<String, List<MyTool>> getTools(SessionState state, String type, Site
 			for(Object object : participants){
 				Participant participant = (Participant)object;
 				//if search term is in the display name or in display Id, add into the list
-				if (StringUtils.containsIgnoreCase(StringUtils.stripAccents(participant.getDisplayName()), StringUtils.stripAccents(search)) || StringUtils.containsIgnoreCase(participant.getDisplayId(),search)) {
+				if (StringUtils.containsIgnoreCase(StringUtils.stripAccents(participant.getDisplayName()), StringUtils.stripAccents(search))
+						|| StringUtils.containsIgnoreCase(participant.getDisplayId(),search)
+						|| StringUtils.containsIgnoreCase(participant.getWorkingPlace(), search)
+						|| StringUtils.containsIgnoreCase(participant.getPosition(), search)
+						|| StringUtils.containsIgnoreCase(participant.getFirm(), search)) {
 					members.add(participant);
 				}
 			}

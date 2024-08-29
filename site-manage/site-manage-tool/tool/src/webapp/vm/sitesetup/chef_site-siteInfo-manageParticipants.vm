@@ -102,6 +102,42 @@
                                 </a>
                             </th>
                         #end
+                        <th id="workingPlace" scope="col">
+                             <a href="#toolLinkParam("$action" "doSort_roster" "criterion=participant_workingPlace")" title="$tlang.getString("sitegen.siteinfolist.sortworkingPlace")">
+                                 $tlang.getString("sitegen.siteinfolist.workingPlace")
+                                 #if ($currentSortedBy.equals("participant_workingPlace"))
+                                     #if ($currentSortAsc.equals("true"))
+                                         <img src="#imageLink("sakai/sortascending.gif")" title="$tlang.getString("sitegen.siteinfolist.sortworkingPlaceas")" alt="$tlang.getString("sitegen.siteinfolist.sortworkingPlaceas")" />
+                                     #else
+                                         <img src="#imageLink("sakai/sortdescending.gif")" title="$tlang.getString("sitegen.siteinfolist.sortworkingPlacedes")" alt="$tlang.getString("sitegen.siteinfolist.sortworkingPlacedes")" />
+                                     #end
+                                 #end
+                             </a>
+                        </th>
+                        <th id="position" scope="col">
+                            <a href="#toolLinkParam("$action" "doSort_roster" "criterion=participant_position")" title="$tlang.getString("sitegen.siteinfolist.sortposition")">
+                                $tlang.getString("sitegen.siteinfolist.position")
+                                #if ($currentSortedBy.equals("participant_position"))
+                                    #if ($currentSortAsc.equals("true"))
+                                        <img src="#imageLink("sakai/sortascending.gif")" title="$tlang.getString("sitegen.siteinfolist.sortpositionas")" alt="$tlang.getString("sitegen.siteinfolist.sortpositionas")" />
+                                    #else
+                                        <img src="#imageLink("sakai/sortdescending.gif")" title="$tlang.getString("sitegen.siteinfolist.sortpositiondes")" alt="$tlang.getString("sitegen.siteinfolist.sortpositiondes")" />
+                                    #end
+                                #end
+                            </a>
+                        </th>
+                        <th id="firm" scope="col">
+                            <a href="#toolLinkParam("$action" "doSort_roster" "criterion=participant_firm")" title="$tlang.getString("sitegen.siteinfolist.sortfirm")">
+                                $tlang.getString("sitegen.siteinfolist.firm")
+                                #if ($currentSortedBy.equals("participant_firm"))
+                                    #if ($currentSortAsc.equals("true"))
+                                        <img src="#imageLink("sakai/sortascending.gif")" title="$tlang.getString("sitegen.siteinfolist.sortfirmas")" alt="$tlang.getString("sitegen.siteinfolist.sortfirmas")" />
+                                    #else
+                                        <img src="#imageLink("sakai/sortdescending.gif")" title="$tlang.getString("sitegen.siteinfolist.sortfirmdes")" alt="$tlang.getString("sitegen.siteinfolist.sortfirmdes")" />
+                                    #end
+                                #end
+                            </a>
+                        </th>
                         <th id="role" scope="col">
                             <a href="#toolLinkParam("$action" "doSort_roster" "criterion=participant_role")" title="$tlang.getString("sitegen.siteinfolist.sortrole")">
                                 $tlang.getString("sitegen.siteinfolist.role")
@@ -165,6 +201,15 @@
                                     $!partCredits
                                 </td>
                             #end
+                            <td headers="workingPlace">
+                                    $!{participant.workingPlace}
+                            </td>
+                            <td headers="position">
+                                    $!{participant.position}
+                            </td>
+                            <td headers="firm">
+                                    $!{participant.firm}
+                            </td>
                             <td headers="role">
                                 #set($uRole = "")
                                 #set($uRole = $participant.getRole())
