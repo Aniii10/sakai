@@ -306,22 +306,27 @@ public class SiteInfoToolServlet extends HttpServlet
 			{
 				// Create Participant Element
 				Element participantNode = doc.createElement(PARTICIPANT_NODE_NAME);
-				
+
 				// participant name
 				writeStringNodeToDom(doc, participantNode, PARTICIPANT_NAME_NODE_NAME, StringUtils.trimToEmpty(participant.getName()));
 
 				// display id
 				writeStringNodeToDom(doc, participantNode, PARTICIPANT_ID_NODE_NAME, StringUtils.trimToEmpty(participant.getDisplayId()));
 
+				Element workingPlaceNode = doc.createElement(PARTICIPANT_WORKING_PLACE_NODE_NAME);
 				// working place
-				writeStringNodeToDom(doc, participantNode, PARTICIPANT_WORKING_PLACE_NODE_NAME, StringUtils.trimToEmpty(participant.getWorkingPlace()));
+				writeStringNodeToDom(doc, workingPlaceNode, PARTICIPANT_WORKING_PLACE_NODE_NAME, StringUtils.trimToEmpty(participant.getWorkingPlace()));
+				participantNode.appendChild(workingPlaceNode);
 
+				Element positionNode = doc.createElement(PARTICIPANT_POSITION_NODE_NAME);
 				// position
-				writeStringNodeToDom(doc, participantNode, PARTICIPANT_POSITION_NODE_NAME, StringUtils.trimToEmpty(participant.getPosition()));
+				writeStringNodeToDom(doc, positionNode, PARTICIPANT_POSITION_NODE_NAME, StringUtils.trimToEmpty(participant.getPosition()));
+				participantNode.appendChild(positionNode);
 
+				Element firmNode = doc.createElement(PARTICIPANT_FIRM_NODE_NAME);
 				// firm
-				writeStringNodeToDom(doc, participantNode, PARTICIPANT_FIRM_NODE_NAME, StringUtils.trimToEmpty(participant.getFirm()));
-
+				writeStringNodeToDom(doc, firmNode, PARTICIPANT_FIRM_NODE_NAME, StringUtils.trimToEmpty(participant.getFirm()));
+				participantNode.appendChild(firmNode);
 
 				// sections
 				Element sectionsNode = doc.createElement(PARTICIPANT_SECTIONS_NODE_NAME);

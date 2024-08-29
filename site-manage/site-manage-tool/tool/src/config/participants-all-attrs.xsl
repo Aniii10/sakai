@@ -27,7 +27,7 @@
 			<fo:layout-master-set>
 				<!-- page layout -->
 				<!-- layout for the first page -->
-				<fo:simple-page-master master-name="roster" page-width="8.5in" page-height="11in" margin-top=".5in" margin-bottom=".5in" margin-left=".5in" margin-right=".5in">
+				<fo:simple-page-master master-name="roster" page-width="11in" page-height="8.5in" margin-top=".5in" margin-bottom=".5in" margin-left=".5in" margin-right=".5in">
 					<fo:region-body margin-top="1.0cm" />
 					<fo:region-before precedence="true" extent="1.0cm" />
 					<fo:region-after precedence="true" extent="1.0cm" />
@@ -43,9 +43,9 @@
 				</fo:static-content>
 				<fo:static-content flow-name="xsl-region-after"> </fo:static-content>
 				<fo:flow flow-name="xsl-region-body" font-size="9pt">
-					<fo:table table-layout="fixed" width="7.5in">
-						<fo:table-column column-width="2.5in" />
-						<fo:table-column column-width="4in" />
+					<fo:table table-layout="fixed" width="10in">
+						<fo:table-column column-width="3.3in" />
+						<fo:table-column column-width="6.7in" />
 						<fo:table-body>
 							<fo:table-row>
 								<fo:table-cell  padding="4pt">
@@ -125,9 +125,9 @@
 						<!-- position -->
 						<fo:table-column column-width="1in" />
 						<!-- firm -->
-						<fo:table-column column-width="1.5in" />
+						<fo:table-column column-width=".7in" />
 						<!-- section col -->
-						<fo:table-column column-width="2.2in" />
+						<fo:table-column column-width="1.5in" />
 						<!-- credits col -->
 						<fo:table-column column-width=".5in" />
 						<!-- role col -->
