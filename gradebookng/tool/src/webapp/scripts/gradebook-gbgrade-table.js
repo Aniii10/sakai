@@ -207,6 +207,18 @@ $(document).ready(function() {
         $("#studentHeaderTemplate").html().trim().toString()),
     studentCell: new TrimPathFragmentCache('studentCell', TrimPath.parseTemplate(
         $("#studentCellTemplate").html().trim().toString())),
+    workingPlaceHeader: TrimPath.parseTemplate(
+        $("#workingPlaceHeaderTemplate").html().trim().toString()),
+    workingPlaceCell: new TrimPathFragmentCache('workingPlaceCell', TrimPath.parseTemplate(
+        $("#workingPlaceCellTemplate").html().trim().toString())),
+    positionHeader: TrimPath.parseTemplate(
+        $("#positionHeaderTemplate").html().trim().toString()),
+    positionCell: new TrimPathFragmentCache('positionCell', TrimPath.parseTemplate(
+        $("#positionCellTemplate").html().trim().toString())),
+    firmHeader: TrimPath.parseTemplate(
+        $("#firmHeaderTemplate").html().trim().toString()),
+    firmCell: new TrimPathFragmentCache('firmCell', TrimPath.parseTemplate(
+        $("#firmCellTemplate").html().trim().toString())),
     metadata: TrimPath.parseTemplate(
         $("#metadataTemplate").html().trim().toString()),
     studentSummary: TrimPath.parseTemplate(
@@ -702,6 +714,10 @@ GbGradeTable.renderTable = function (elementId, tableData) {
         return GbGradeTable.studentSorter(a, b);
     }
   });
+
+  GbGradeTable.setupWorkingPlaceColumn();
+  GbGradeTable.setupPositionColumn();
+  GbGradeTable.setupFirmColumn();
 
   GbGradeTable._fixedColumns.push({
     columnType: "coursegrade",
@@ -1829,7 +1845,7 @@ GbGradeTable.applyStudentFilter = function(data) {
       var match = true;
 
       var student = row[GbGradeTable.STUDENT_COLUMN_INDEX];
-      var searchableFields = [student.firstName, student.lastName, student.eid];
+      var searchableFields = [student.firstName, student.lastName, student.eid, student.workingPlace, student.position, student.firm];
       if (GbGradeTable.settings.isStudentNumberVisible) {
           searchableFields.push(student.studentNumber);
       }
@@ -3505,6 +3521,168 @@ GbGradeTable.setupStudentNumberColumn = function() {
         }),
         editor: false,
         width: studentNumberColumnWidth,
+    });
+};
+
+GbGradeTable.setupWorkingPlaceColumn = function() {
+    GbGradeTable.templates['workingPlaceCell'] = new TrimPathFragmentCache(
+        'workingPlaceCell',
+        TrimPath.parseTemplate($("#workingPlaceCellTemplate").html().trim().toString()));
+
+    GbGradeTable.templates['workingPlaceHeader'] = TrimPath.parseTemplate($("#workingPlaceHeaderTemplate").html().trim().toString());
+
+    GbGradeTable.workingPlaceCellRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        if (value === null) {
+            return;
+        }
+
+        var $td = $(td);
+
+        $td.attr("scope", "row").attr("role", "rowHeader");
+
+        var cellKey = (row + '_' + col);
+
+        var student = GbGradeTable.students.find(student => student.userId === value.userId);
+
+        var workingPlace = student.workingPlace;
+
+        var data = {
+            settings: GbGradeTable.settings,
+            workingPlace: workingPlace
+        };
+
+        var html = GbGradeTable.templates.workingPlaceCell.setHTML(td, data);
+
+        $.data(td, 'cell-initialised', cellKey);
+        $.data(td, "studentid", value.userId);
+        $.data(td, "metadata", {
+            id: cellKey,
+            workingPlace: workingPlace
+        });
+
+        $td.removeAttr('aria-describedby');
+    };
+
+    GbGradeTable._fixedColumns.splice(2, 0, {
+        columnType: "workingPlace",
+        renderer: GbGradeTable.workingPlaceCellRenderer,
+        headerTemplate: GbGradeTable.templates.workingPlaceHeader,
+        _data_: GbGradeTable.students.map(student => {
+            return {
+                userId: student.userId,
+                workingPlace: student.workingPlace
+            };
+        }),
+        editor: false,
+        width: studentNumberColumnWidth
+    });
+};
+
+GbGradeTable.setupPositionColumn = function() {
+    GbGradeTable.templates['positionCell'] = new TrimPathFragmentCache(
+        'positionCell',
+        TrimPath.parseTemplate($("#positionCellTemplate").html().trim().toString()));
+
+    GbGradeTable.templates['positionHeader'] = TrimPath.parseTemplate($("#positionHeaderTemplate").html().trim().toString());
+
+    GbGradeTable.positionCellRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        if (value === null) {
+            return;
+        }
+
+        var $td = $(td);
+
+        $td.attr("scope", "row").attr("role", "rowHeader");
+
+        var cellKey = (row + '_' + col);
+
+        var student = GbGradeTable.students.find(student => student.userId === value.userId);
+
+        var position = student.position;
+
+        var data = {
+            settings: GbGradeTable.settings,
+            position: position
+        };
+
+        var html = GbGradeTable.templates.positionCell.setHTML(td, data);
+
+        $.data(td, 'cell-initialised', cellKey);
+        $.data(td, "studentid", value.userId);
+        $.data(td, "metadata", {
+            id: cellKey,
+            position: position
+        });
+
+        $td.removeAttr('aria-describedby');
+    };
+
+    GbGradeTable._fixedColumns.splice(2, 0, {
+        columnType: "position",
+        renderer: GbGradeTable.positionCellRenderer,
+        headerTemplate: GbGradeTable.templates.positionHeader,
+        _data_: GbGradeTable.students.map(student => {
+            return {
+                userId: student.userId,
+                position: student.position
+            };
+        }),
+        editor: false,
+        width: studentNumberColumnWidth
+    });
+};
+
+GbGradeTable.setupFirmColumn = function() {
+    GbGradeTable.templates['firmCell'] = new TrimPathFragmentCache(
+        'firmCell',
+        TrimPath.parseTemplate($("#firmCellTemplate").html().trim().toString()));
+
+    GbGradeTable.templates['firmHeader'] = TrimPath.parseTemplate($("#firmHeaderTemplate").html().trim().toString());
+
+    GbGradeTable.firmCellRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        if (value === null) {
+            return;
+        }
+
+        var $td = $(td);
+
+        $td.attr("scope", "row").attr("role", "rowHeader");
+
+        var cellKey = (row + '_' + col);
+
+        var student = GbGradeTable.students.find(student => student.userId === value.userId);
+
+        var firm = student.firm;
+
+        var data = {
+            settings: GbGradeTable.settings,
+            firm: firm
+        };
+
+        var html = GbGradeTable.templates.firmCell.setHTML(td, data);
+
+        $.data(td, 'cell-initialised', cellKey);
+        $.data(td, "studentid", value.userId);
+        $.data(td, "metadata", {
+            id: cellKey,
+            firm: firm
+        });
+
+        $td.removeAttr('aria-describedby');
+    };
+
+    GbGradeTable._fixedColumns.splice(3, 0, {
+        columnType: "firm",
+        renderer: GbGradeTable.firmCellRenderer,
+        headerTemplate: GbGradeTable.templates.firmHeader,
+        _data_: GbGradeTable.students.map(student => {
+            return {
+                userId: student.userId,
+                firm: student.firm
+            };
+        }),
+        editor: false,
+        width: studentNumberColumnWidth
     });
 };
 

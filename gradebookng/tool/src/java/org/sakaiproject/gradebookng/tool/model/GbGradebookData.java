@@ -91,6 +91,9 @@ public class GbGradebookData {
 		private String userId;
 		private String firstName;
 		private String lastName;
+		private String workingPlace;
+		private String position;
+		private String firm;
 
 		private String hasComments;
 		private String hasConcurrentEdit;
@@ -504,6 +507,9 @@ public class GbGradebookData {
 
 		for (final GbStudentGradeInfo student : studentInfo) {
 			final StudentDefinition studentDefinition = new StudentDefinition();
+			studentDefinition.setWorkingPlace(student.getWorkingPlace() != null ? student.getWorkingPlace() : "");
+			studentDefinition.setPosition(student.getPosition() != null ? student.getPosition() : "");
+			studentDefinition.setFirm(student.getFirm() != null && !student.getFirm().isEmpty() ? student.getFirm() : "");
 			studentDefinition.setEid(student.getStudentEid());
 			studentDefinition.setUserId(student.getStudentUuid());
 			studentDefinition.setFirstName(student.getStudentFirstName());

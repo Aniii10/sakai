@@ -44,6 +44,9 @@ public class GbStudentGradeInfo implements Serializable {
 	private String studentLastName;
 	private String studentEid;
 	private String studentNumber;
+	private String workingPlace;
+	private String position;
+	private String firm;
 	@Setter
 	private CourseGradeTransferBean courseGrade;
 	private Map<Long, GbGradeInfo> grades;
@@ -67,6 +70,9 @@ public class GbStudentGradeInfo implements Serializable {
 		this.studentFirstName = u.getFirstName();
 		this.studentLastName = u.getLastName();
 		studentNumber = u.getStudentNumber();
+		this.workingPlace = u.getWorkingPlace();
+		this.position = u.getPosition();
+		this.firm = u.getFirm();
 		grades = new HashMap<>();
 		categoryAverages = new HashMap<>();
 		sections = u.getSections();
@@ -78,6 +84,9 @@ public class GbStudentGradeInfo implements Serializable {
 		this.studentDisplayId = u.getDisplayId();
 		this.studentFirstName = u.getFirstName();
 		this.studentLastName = u.getLastName();
+		this.workingPlace = u.getProperties().getProperty("Working Place");
+		this.position = u.getProperties().getProperty("Position");
+		this.firm = u.getProperties().getProperty("Firm");
 		this.studentDisplayName = u.getDisplayName();
 		this.studentNumber = studentNumber;
 		this.grades = new HashMap<>();

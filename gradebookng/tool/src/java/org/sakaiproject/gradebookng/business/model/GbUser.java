@@ -45,6 +45,13 @@ public class GbUser implements GbUserBase, Serializable, Comparable<GbUser> {
 	@EqualsAndHashCode.Include
 	private final String userUuid;
 
+	private final String workingPlace;
+
+	private final String position;
+
+	private final String firm;
+
+
 	/**
 	 * If displaying an eid, this is the one to display
 	 */
@@ -69,6 +76,9 @@ public class GbUser implements GbUserBase, Serializable, Comparable<GbUser> {
 	}
 
 	public GbUser(final User u, String studentNumber) {
+		this.workingPlace = u.getProperties().getProperty("Working Place");
+		this.position = u.getProperties().getProperty("Position");
+		this.firm = u.getProperties().getProperty("Firm");
 		this.userUuid = u.getId();
 		this.displayId = u.getDisplayId();
 		this.displayName = FormatHelper.htmlEscape(u.getDisplayName());

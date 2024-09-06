@@ -72,6 +72,9 @@ public class ExportPanel extends BasePanel {
 	boolean includeStudentName = true;
 	boolean includeStudentId = true;
 	boolean includeStudentNumber = true;
+	boolean includeWorkingPlace = true;
+	boolean includePosition = true;
+	boolean includeFirm = true;
 	private boolean includeSectionMembership = false;
 	boolean includeStudentDisplayId = false;
 	boolean includeGradeItemScores = true;
@@ -138,6 +141,36 @@ public class ExportPanel extends BasePanel {
 			public boolean isVisible()
 			{
 				return stuNumVisible;
+			}
+		});
+
+		add(new AjaxCheckBox("includeWorkingPlace", Model.of(this.includeWorkingPlace)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(final AjaxRequestTarget ajaxRequestTarget) {
+				ExportPanel.this.includeWorkingPlace = !ExportPanel.this.includeWorkingPlace;
+				setDefaultModelObject(ExportPanel.this.includeWorkingPlace);
+			}
+		});
+
+		add(new AjaxCheckBox("includePosition", Model.of(this.includePosition)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(final AjaxRequestTarget ajaxRequestTarget) {
+				ExportPanel.this.includePosition = !ExportPanel.this.includePosition;
+				setDefaultModelObject(ExportPanel.this.includePosition);
+			}
+		});
+
+		add(new AjaxCheckBox("includeFirm", Model.of(this.includeFirm)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(final AjaxRequestTarget ajaxRequestTarget) {
+				ExportPanel.this.includeFirm = !ExportPanel.this.includeFirm;
+				setDefaultModelObject(ExportPanel.this.includeFirm);
 			}
 		});
 
@@ -324,6 +357,15 @@ public class ExportPanel extends BasePanel {
 				if (isCustomExport && this.includeSectionMembership) {
 					header.add(String.join(" ", IGNORE_COLUMN_PREFIX, getString("column.header.section")));
 				}
+				if (!isCustomExport || this.includeWorkingPlace) {
+					header.add(String.join(" ", IGNORE_COLUMN_PREFIX, getString("importExport.export.csv.headers.workingPlace")));
+				}
+				if (!isCustomExport || this.includePosition) {
+					header.add(String.join(" ", IGNORE_COLUMN_PREFIX, getString("importExport.export.csv.headers.position")));
+				}
+				if (!isCustomExport || this.includeFirm) {
+					header.add(String.join(" ", IGNORE_COLUMN_PREFIX, getString("importExport.export.csv.headers.firm")));
+				}
 
 				// get list of assignments. this allows us to build the columns and then fetch the grades for each student for each assignment from the map
 				SortType sortBy = SortType.SORT_BY_SORTING;
@@ -427,9 +469,27 @@ public class ExportPanel extends BasePanel {
 					{
 						line.add(studentGradeInfo.getStudentNumber());
 					}
+					if (!isCustomExport && this.includeWorkingPlace) {
+						line.add(studentGradeInfo.getWorkingPlace());
+					}
+					if (!isCustomExport && this.includePosition) {
+						line.add(studentGradeInfo.getPosition());
+					}
+					if (!isCustomExport && this.includeFirm) {
+						line.add(studentGradeInfo.getFirm());
+					}
 					List<String> userSections = studentGradeInfo.getSections();
 					if (isCustomExport && this.includeSectionMembership) {
 						line.add((userSections.size() > 0) ? userSections.get(0) : getString("sections.label.none"));
+					}
+					if (isCustomExport && this.includeWorkingPlace) {
+						line.add(studentGradeInfo.getWorkingPlace());
+					}
+					if (isCustomExport && this.includePosition) {
+						line.add(studentGradeInfo.getPosition());
+					}
+					if (isCustomExport && this.includeFirm) {
+						line.add(studentGradeInfo.getFirm());
 					}
 					if (!isCustomExport || this.includeGradeItemScores || this.includeGradeItemComments || this.includeCategoryAverages) {
 						final Map<Long, Double> categoryAverages = studentGradeInfo.getCategoryAverages();

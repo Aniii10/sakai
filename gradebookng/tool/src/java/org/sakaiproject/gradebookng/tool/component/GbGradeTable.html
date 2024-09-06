@@ -249,6 +249,33 @@
                 </div>
             </div>
         </script>
+        <script id="workingPlaceHeaderTemplate" type="text/template">
+            <div class="relative">
+                <div class="colHeader" data-col-index="${col}">
+                    <a class="gb-title" wicket:message="title:label.gradeitem.workingplaceheadertooltip,aria-label:label.gradeitem.workingplaceheadertooltip">
+                        <wicket:message key="column.header.workingPlace"/>
+                    </a>
+                </div>
+            </div>
+        </script>
+        <script id="positionHeaderTemplate" type="text/template">
+            <div class="relative">
+                <div class="colHeader" data-col-index="${col}">
+                    <a class="gb-title" wicket:message="title:label.gradeitem.positionheadertooltip,aria-label:label.gradeitem.positionheadertooltip">
+                        <wicket:message key="column.header.position"/>
+                    </a>
+                </div>
+            </div>
+        </script>
+        <script id="firmHeaderTemplate" type="text/template">
+            <div class="relative">
+                <div class="colHeader" data-col-index="${col}">
+                    <a class="gb-title" wicket:message="title:label.gradeitem.firmheadertooltip,aria-label:label.gradeitem.firmheadertooltip">
+                        <wicket:message key="column.header.firm"/>
+                    </a>
+                </div>
+            </div>
+        </script>
         <script id="studentNumberHeaderTemplate" type="text/template">
             <div class="relative">
                 <div class="colHeader" data-col-index="${col}">
@@ -264,6 +291,27 @@
                     <div class="rowHeader">
                         ${studentNumber}
                     </div>
+                </div>
+            </div>
+        </script>
+        <script id="workingPlaceCellTemplate" type="text/template">
+            <div class="relative gb-working-place-cell">
+                <div class="gb-value">
+                    ${workingPlace}
+                </div>
+            </div>
+        </script>
+        <script id="positionCellTemplate" type="text/template">
+            <div class="relative gb-position-cell">
+                <div class="gb-value">
+                    ${position}
+                </div>
+            </div>
+        </script>
+        <script id="firmCellTemplate" type="text/template">
+            <div class="relative gb-firm-cell">
+                <div class="gb-value">
+                    ${firm}
                 </div>
             </div>
         </script>
