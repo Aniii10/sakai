@@ -62,7 +62,7 @@ public interface SakaiProxy {
 	public final static Boolean DEFAULT_VIEW_EMAIL = true;
 	public final static Boolean DEFAULT_VIEW_CONNECTIONS = true;
 	public final static Boolean DEFAULT_VIEW_USER_DISPLAY_ID = true;
-	public final static Boolean DEFAULT_VIEW_USER_PROPERTIES = true;
+	public final static Boolean DEFAULT_VIEW_USER_PROPERTIES = false;
 	public final static Boolean DEFAULT_VIEW_CANDIDATE_DETAILS = true;
 	public final static Boolean DEFAULT_VIEW_USER_NAME_PRONUNCIATION = true;
 	public final static Integer DEFAULT_ROSTER_STATE = 0;

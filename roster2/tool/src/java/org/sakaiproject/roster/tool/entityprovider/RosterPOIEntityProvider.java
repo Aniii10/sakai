@@ -111,6 +111,9 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 	public final static String KEY_ENROLLMENT_SET_ID = "enrollmentSetId";
 	public final static String KEY_ENROLLMENT_STATUS = "enrollmentStatus";
 	public final static String KEY_FACET_NAME = "facetName";
+	public final static String KEY_FACET_WORKINGPLACE = "workingPlace";
+	public final static String KEY_FACET_POSITION = "position";
+	public final static String KEY_FACET_FIRM = "firm";
 	public final static String KEY_FACET_USER_ID = "facetUserId";
 	public final static String KEY_FACET_EMAIL = "facetEmail";
 	public final static String KEY_FACET_ROLE = "facetRole";
@@ -120,6 +123,9 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 
 	// defaults to use if any keys are not specified
 	public final static String DEFAULT_FACET_NAME = "Name";
+	public final static String DEFAULT_FACET_WORKINGPLACE = "Working Place";
+	public final static String DEFAULT_FACET_POSITION = "Position";
+	public final static String DEFAULT_FACET_FIRM = "Firm";
 	public final static String DEFAULT_FACET_USER_ID = "User ID";
 	public final static String DEFAULT_FACET_EMAIL = "Email Address";
 	public final static String DEFAULT_FACET_ROLE = "Role";
@@ -402,10 +408,25 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 						row.add(member.getSortName());
 					}
 
+
 					if (sakaiProxy.getViewUserDisplayId()) {
 						row.add(member.getDisplayId());
 					}
 
+					List<String> properties = member.getUserProperties().entrySet().stream().map(e -> e.getKey() + ":" + e.getValue()).collect(Collectors.toList());
+					if (!properties.isEmpty()) {
+						for (String prop : properties) {
+							String[] keyValue = prop.split(":");
+
+							if (keyValue[0].equals("Working Place") || keyValue[0].equals("Position") || keyValue[0].equals("Firm")) {
+								row.add(keyValue[1]);
+							}
+						}
+					} else {
+						row.add("");
+						row.add("");
+						row.add("");
+					}
 					if (this.sakaiProxy.getViewEmail(site.getId())) {
 						row.add(member.getEmail());
 					}
@@ -513,6 +534,21 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 
 		if (this.sakaiProxy.getViewUserDisplayId()) {
 			row.add(member.getDisplayId());
+		}
+
+		List<String> properties = member.getUserProperties().entrySet().stream().map(e -> e.getKey() + ":" + e.getValue()).collect(Collectors.toList());
+		if (!properties.isEmpty()) {
+			for (String prop : properties) {
+				String[] keyValue = prop.split(":");
+
+				if (keyValue[0].equals("Working Place") || keyValue[0].equals("Position") || keyValue[0].equals("Firm")) {
+					row.add(keyValue[1]);
+				}
+			}
+		} else {
+			row.add("");
+			row.add("");
+			row.add("");
 		}
 
 		if (this.sakaiProxy.getViewEmail(siteId)) {
@@ -716,6 +752,10 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 		if (this.sakaiProxy.getViewUserDisplayId()) {
 			header.add(rl.getString("facet_userId"));
 		}
+
+		header.add(rl.getString("facet_working_place"));
+		header.add(rl.getString("facet_position"));
+		header.add(rl.getString("facet_firm"));
 
 		if (this.sakaiProxy.getViewEmail(siteId)) {
 			header.add(rl.getString("facet_email"));

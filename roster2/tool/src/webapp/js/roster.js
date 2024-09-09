@@ -428,6 +428,10 @@ roster.renderMembership = function (options) {
         m.siteId = roster.siteId;
         m.official = roster.officialPictureMode;
 
+        const firm = m.userProperties?.Firm ?? "";
+        const position = m.userProperties?.Position ?? "";
+        const workingPlace = m.userProperties?.["Working Place"] ?? "";
+
         const groupIds = Object.keys(m.groups);
         m.hasGroups = groupIds.length > 0;
         m.groups = groupIds.reduce((acc, id) => { acc.push({id: id, title: m.groups[id]}); return acc; }, []);
@@ -446,11 +450,21 @@ roster.renderMembership = function (options) {
         
         m.hasAdditionalInfo = m.hasSpecialNeeds || m.hasAdditionalNotes;
 
+        m.firm = firm;
+        m.position = position;
+        m.workingPlace = workingPlace;
+
         // Append to the roster members the new loaded members.
         if (!roster.members.find(item => item.userId === m.userId)) {
           roster.members.push(m);
         }
 
+        roster.searchIndex[m.userId] = `${m.displayName} ${m.workingPlace} ${m.position} ${m.firm} ${m.email} ${m.phone}`;
+
+           roster.searchIndexKeys = Object.keys(roster.searchIndex);
+           roster.searchIndexValues = roster.searchIndexKeys.map(function (userId) {
+           return roster.searchIndex[userId];
+        });
       });
 
       roster.renderMembers(members, $('#roster-members'), enrollmentsMode, options);
