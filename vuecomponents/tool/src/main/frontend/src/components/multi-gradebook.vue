@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-if="!isEmpty">
 <!-- TODO revisar labels segun items o categorias -->
 		<!-- <span>{{ i18n.groups }}</span> -->
 		<multiselect
@@ -104,6 +104,7 @@ export default {
 		return {
 			value: [],
 			options: [],
+			isEmpty: false
 		};
 	},
 	computed: {},
@@ -159,6 +160,14 @@ export default {
 					});
 					return parent;
 				});
+
+				const allItemsEmpty = this.options.every(group => group.items.length === 0);
+
+				if (allItemsEmpty) {
+					this.isEmpty = true;
+				} else {
+					this.isEmpty = false;
+				}
 			} else {
 				this.options = [{ name: 'No options found', items: [] }];
 			}

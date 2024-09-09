@@ -229,15 +229,16 @@ public class GradesController extends AbstractSakaiApiController {
             String gbUid = entry.getKey();
             String groupTitle = entry.getValue();
 
-            List<CategoryDefinition> categoryDefinitionList = gradingService.getCategoryDefinitions(gbUid, siteId);
+            if (gradingService.isCategoriesEnabled(gbUid)) {
+                List<CategoryDefinition> categoryDefinitionList = gradingService.getCategoryDefinitions(gbUid, siteId);
 
-            for (CategoryDefinition category : categoryDefinitionList) {
-                Long categoryId = category.getId();
-                String categoryName = category.getName();
+                for (CategoryDefinition category : categoryDefinitionList) {
+                    Long categoryId = category.getId();
+                    String categoryName = category.getName();
 
-                gbItems.add(new GradebookItemRestBean(categoryId.toString(), categoryName, false));
+                    gbItems.add(new GradebookItemRestBean(categoryId.toString(), categoryName, false));
+                }
             }
-
             gbWithItems.add(new GradebookRestBean(gbUid, groupTitle, gbItems));
         }
 
