@@ -17,14 +17,10 @@ package org.sakaiproject.gradebookng.framework;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import org.sakaiproject.entity.api.Entity;
@@ -44,6 +40,7 @@ import org.sakaiproject.grading.api.GradebookInformation;
 import org.sakaiproject.grading.api.GradeMappingDefinition;
 import org.sakaiproject.grading.api.SortType;
 import org.sakaiproject.gradebookng.business.GradebookNgBusinessService;
+import org.sakaiproject.site.api.Group;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
@@ -58,6 +55,7 @@ import lombok.Setter;
  * Entity Producer for GradebookNG. This is required to participate in other entity actions but also handles the transfer of data between
  * sites
  */
+@Slf4j
 public class GradebookNgEntityProducer implements EntityProducer, EntityTransferrer {
 
 	protected static final String[] TOOL_IDS = { "sakai.gradebookng" };
@@ -316,12 +314,30 @@ public class GradebookNgEntityProducer implements EntityProducer, EntityTransfer
 	@Override
 	public List<Map<String, String>> getEntityMap(String fromContext) {
 
-		return this.gradingService.getAssignments(fromContext, fromContext, SortType.SORT_BY_NONE).stream()
+		List<Map<String, String>> entityList = new ArrayList<>();
+		if (gradingService.isGradebookGroupEnabled(fromContext)){
+			List<Gradebook> gradebooks = gradingService.getGradebookGroupInstances(fromContext);
+
+			for (Gradebook gradebook: gradebooks){
+				String gradebookUid = gradebook.getUid();
+
+				List<Assignment> assignments = this.gradingService.getAssignments(gradebookUid, fromContext, SortType.SORT_BY_NONE);
+
+				assignments.stream()
+						.map(ass -> Map.of("id", ass.getId().toString(), "title", ass.getName()))
+						.forEach(entityList::add);
+			}
+		} else {
+			return this.gradingService.getAssignments(fromContext, fromContext, SortType.SORT_BY_NONE).stream()
 			.map(ass -> Map.of("id", ass.getId().toString(), "title", ass.getName())).collect(Collectors.toList());
+		}
+		return entityList;
 	}
 
 	@Override
 	public Map<String, String> transferCopyEntities(String fromContext, String toContext, List<String> ids, List<String> options) {
+
+		Map<String, String> resultGradebookTransfer = new HashMap<>();
 
 		final Gradebook gradebook = (Gradebook) this.gradingService.getGradebook(fromContext, fromContext);
 
@@ -329,7 +345,48 @@ public class GradebookNgEntityProducer implements EntityProducer, EntityTransfer
 
 		final List<Assignment> assignments = this.gradingService.getAssignments(fromContext, fromContext, SortType.SORT_BY_NONE);
 
-		return this.gradingService.transferGradebook(gradebookInformation, assignments, toContext, fromContext);
+		if(gradingService.isGradebookGroupEnabled(fromContext)) {
+			try {
+				Site siteFrom = siteService.getSite(fromContext);
+				Collection<Group> groupListFrom = siteFrom.getGroups();
+
+				Site siteTo = siteService.getSite(toContext);
+				Collection<Group> groupListTo = siteTo.getGroups();
+
+				groupListFrom.forEach(groupFrom -> {
+					String groupNameFrom = groupFrom.getTitle();
+
+					Optional<Group> opGroup = groupListTo.stream()
+							.filter(groupTo -> groupTo.getTitle().equals(groupNameFrom))
+							.findFirst();
+
+					Gradebook gradebookGroupFrom = gradingService.getGradebook(groupFrom.getId(), fromContext);
+
+					if (opGroup.isPresent() && gradebookGroupFrom != null) {
+						Group groupTo = opGroup.get();
+
+						Gradebook gradebookGroupTo = gradingService.getGradebook(groupTo.getId(), toContext);
+
+						if (gradebookGroupTo != null) {
+							GradebookInformation gradebookInfoFrom = gradingService.getGradebookInformation(gradebookGroupFrom.getUid(), fromContext);
+
+							List<Assignment> assignmentsFrom = gradingService.getAssignments(gradebookGroupFrom.getUid(), fromContext, SortType.SORT_BY_NONE);
+
+							Map<String, String> transfer = gradingService.transferGradebook(gradebookInfoFrom, assignmentsFrom, toContext, fromContext);
+
+							resultGradebookTransfer.putAll(transfer);
+						}
+					}
+				});
+			} catch (IdUnusedException e) {
+				log.error("Error while trying to get gradebooks for site {} : {}", fromContext, e.getMessage());
+				return new HashMap<>();
+			}
+		} else {
+			Map<String, String> transfer = this.gradingService.transferGradebook(gradebookInformation, assignments, toContext, fromContext);
+			resultGradebookTransfer.putAll(transfer);
+		}
+		return resultGradebookTransfer;
 	}
 
 	@Override

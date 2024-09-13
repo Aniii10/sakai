@@ -353,7 +353,7 @@ public class GradingServiceImpl implements GradingService {
         Assignment assignmentDefinition)
             throws ConflictingAssignmentNameException, StaleObjectModificationException {
 
-        return createNewAssignment(gradebookId, null, name, points, dueDate, isNotCounted, isReleased, isExtraCredit, sortOrder, null, assignmentDefinition);
+         return createNewAssignment(gradebookId, null, name, points, dueDate, isNotCounted, isReleased, isExtraCredit, sortOrder, null, assignmentDefinition);
     }
 
     private Long createAssignmentForCategory(Long gradebookId, Long categoryId, String name, Double points, Date dueDate, Boolean isNotCounted,
@@ -664,7 +664,8 @@ public class GradingServiceImpl implements GradingService {
                     if (StringUtils.equals(c.getName(), a.getCategoryName())) {
 
                         if (!categoriesCreated.containsKey(c.getName())) {
-
+                            log.debug("Creando categoría: {}", c.getName());
+                            log.debug("Asignando tarea: {} a la categoría: {}", a.getName(), c.getName());
                             // create category
                             Long categoryId = null;
                             try {
@@ -672,7 +673,7 @@ public class GradingServiceImpl implements GradingService {
                                         c.getDropHighest(), c.getKeepHighest(), c.getExtraCredit(), c.getEqualWeight(), c.getCategoryOrder());
                             } catch (final ConflictingCategoryNameException e) {
                                 // category already exists. Could be from a merge.
-                                log.info("Category: {} already exists in target site. Skipping creation.", c.getName());
+                                log.debug("Category: {} already exists in target site. Skipping creation.", c.getName());
                             }
 
                             if (categoryId == null) {
@@ -693,7 +694,7 @@ public class GradingServiceImpl implements GradingService {
                             transversalMap.put("gb/"+a.getId(),"gb/"+newId);
                         } catch (final ConflictingAssignmentNameException e) {
                             // assignment already exists. Could be from a merge.
-                            log.info("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
+                            log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
                         } catch (final Exception ex) {
                             log.warn("GradebookAssignment: exception {} trying to create {} in target site. Skipping creation.", ex.getMessage(), a.getName());
                         }
@@ -712,21 +713,25 @@ public class GradingServiceImpl implements GradingService {
                             c.getExtraCredit(), c.getEqualWeight(), c.getCategoryOrder());
                 } catch (final ConflictingCategoryNameException e) {
                     // category already exists. Could be from a merge.
-                    log.info("Category: {} already exists in target site. Skipping creation.", c.getName());
+                    log.debug("Category: {} already exists in target site. Skipping creation.", c.getName());
                 }
             });
         }
-
+        List<Assignment> assignmentsTo = getAssignments(gradebook.getUid(), toGradebookUid, SortType.SORT_BY_NONE);
         // create any remaining assignments that have no categories
         assignments.removeIf(a -> assignmentsCreated.contains(a.getName()));
         assignments.forEach(a -> {
 
             try {
-                Long newId = createAssignment(gradebook.getId(), a.getName(), a.getPoints(), a.getDueDate(), !a.getCounted(), a.getReleased(), a.getExtraCredit(), a.getSortOrder(), null);
-                transversalMap.put("gb/"+a.getId(),"gb/"+newId);
+                if (!assignmentExistsInList(assignmentsTo, a.getName())) {
+                    Long newId = createAssignment(gradebook.getId(), a.getName(), a.getPoints(), a.getDueDate(), !a.getCounted(), a.getReleased(), a.getExtraCredit(), a.getSortOrder(), null);
+                    transversalMap.put("gb/"+a.getId(),"gb/"+newId);
+                } else {
+                    log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
+                }
             } catch (final ConflictingAssignmentNameException e) {
                 // assignment already exists. Could be from a merge.
-                log.info("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
+                log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
             } catch (final Exception ex) {
                 log.warn("GradebookAssignment: exception {} trying to create {} in target site. Skipping creation.", ex.getMessage(), a.getName());
             }
@@ -753,16 +758,21 @@ public class GradingServiceImpl implements GradingService {
                     }
                     gradebook.setSelectedGradeMapping(gradeMapping);
                     updateGradebook(gradebook, toGradebookUid);
-                    log.info("Merge to gradebook {} updated grade mapping", toGradebookUid);
+                    log.debug("Merge to gradebook {} updated grade mapping", toGradebookUid);
 
                     break MERGE_GRADE_MAPPING;
                 }
             }
             // Did not find a matching grading scale.
-            log.info("Merge to gradebook {} skipped grade mapping change because grading scale {} is not defined", toGradebookUid,
+            log.debug("Merge to gradebook {} skipped grade mapping change because grading scale {} is not defined", toGradebookUid,
                     fromGradingScaleUid);
         }
         return transversalMap;
+    }
+
+    private boolean assignmentExistsInList(List<Assignment> existingAssignments, String assignmentName) {
+        return existingAssignments.stream()
+                .anyMatch(existingAssignment -> existingAssignment.getName().equals(assignmentName));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
