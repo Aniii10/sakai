@@ -74,6 +74,7 @@ import org.sakaiproject.roster.api.RosterGroup;
 import org.sakaiproject.roster.api.RosterMember;
 import org.sakaiproject.roster.api.RosterSite;
 import org.sakaiproject.roster.api.SakaiProxy;
+import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 
 import lombok.Setter;
@@ -418,7 +419,7 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 						for (String prop : properties) {
 							String[] keyValue = prop.split(":");
 
-							if (keyValue[0].equals("Working Place") || keyValue[0].equals("Position") || keyValue[0].equals("Firm")) {
+							if (keyValue[0].equals(UserDirectoryService.WORKING_PLACE_PROPERTY) || keyValue[0].equals(UserDirectoryService.POSITION_PROPERTY) || keyValue[0].equals(UserDirectoryService.FIRM_PROPERTY)) {
 								row.add(keyValue[1]);
 							}
 						}
@@ -541,7 +542,7 @@ public class RosterPOIEntityProvider extends AbstractEntityProvider implements
 			for (String prop : properties) {
 				String[] keyValue = prop.split(":");
 
-				if (keyValue[0].equals("Working Place") || keyValue[0].equals("Position") || keyValue[0].equals("Firm")) {
+				if (keyValue[0].equals(UserDirectoryService.WORKING_PLACE_PROPERTY) || keyValue[0].equals(UserDirectoryService.POSITION_PROPERTY) || keyValue[0].equals(UserDirectoryService.FIRM_PROPERTY)) {
 					row.add(keyValue[1]);
 				}
 			}

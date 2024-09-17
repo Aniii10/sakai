@@ -402,6 +402,11 @@ public class UsersAction extends PagedResourceActionII
 		// put all (internal) users into the context
 		context.put("users", prepPage(state));
 
+		//put user properties into the context
+		context.put("workingPlace", userDirectoryService.WORKING_PLACE_PROPERTY);
+		context.put("position", userDirectoryService.POSITION_PROPERTY);
+		context.put("firm", userDirectoryService.FIRM_PROPERTY);
+
 		// build the menu
 		Menu bar = new MenuImpl();
 		if (userDirectoryService.allowAddUser())

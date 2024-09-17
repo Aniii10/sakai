@@ -105,9 +105,9 @@
 					<td headers="Status" class="d-none d-sm-table-cell">#if($!user.Properties.getProperty("disabled")) $tlang.getString("disabled") #else $tlang.getString("enabled") #end</td>
 					<td headers="Id" class="d-none d-sm-table-cell">$formattedText.escapeHtml($user.Id)
 					</td>
-					<td headers="Working Place" class="d-none d-md-table-cell">$formattedText.escapeHtml($user.Properties.getProperty("Working Place"))</td>
-					<td headers="Position" class="d-none d-md-table-cell">$formattedText.escapeHtml($user.Properties.getProperty("Position"))</td>
-					<td headers="Firm" class="d-none d-md-table-cell">$formattedText.escapeHtml($user.Properties.getProperty("Firm"))</td>
+					<td headers="Working Place" class="d-none d-md-table-cell">$formattedText.escapeHtml($user.Properties.getProperty($workingPlace))</td>
+					<td headers="Position" class="d-none d-md-table-cell">$formattedText.escapeHtml($user.Properties.getProperty($position))</td>
+					<td headers="Firm" class="d-none d-md-table-cell">$formattedText.escapeHtml($user.Properties.getProperty($firm))</td>
 				</tr>
 	#end
 			</table>

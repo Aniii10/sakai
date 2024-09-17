@@ -26,6 +26,7 @@ import lombok.Setter;
 
 import org.sakaiproject.grading.api.CourseGradeTransferBean;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserDirectoryService;
 
 /**
  * Model for storing the grade info for a student
@@ -84,9 +85,9 @@ public class GbStudentGradeInfo implements Serializable {
 		this.studentDisplayId = u.getDisplayId();
 		this.studentFirstName = u.getFirstName();
 		this.studentLastName = u.getLastName();
-		this.workingPlace = u.getProperties().getProperty("Working Place");
-		this.position = u.getProperties().getProperty("Position");
-		this.firm = u.getProperties().getProperty("Firm");
+		this.workingPlace = u.getProperties().getProperty(UserDirectoryService.WORKING_PLACE_PROPERTY);
+		this.position = u.getProperties().getProperty(UserDirectoryService.POSITION_PROPERTY);
+		this.firm = u.getProperties().getProperty(UserDirectoryService.FIRM_PROPERTY);
 		this.studentDisplayName = u.getDisplayName();
 		this.studentNumber = studentNumber;
 		this.grades = new HashMap<>();

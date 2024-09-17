@@ -29,6 +29,7 @@ import org.sakaiproject.gradebookng.business.util.FormatHelper;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import org.sakaiproject.user.api.UserDirectoryService;
 
 /**
  * DTO for a user. Enhance as required.
@@ -76,9 +77,9 @@ public class GbUser implements GbUserBase, Serializable, Comparable<GbUser> {
 	}
 
 	public GbUser(final User u, String studentNumber) {
-		this.workingPlace = u.getProperties().getProperty("Working Place");
-		this.position = u.getProperties().getProperty("Position");
-		this.firm = u.getProperties().getProperty("Firm");
+		this.workingPlace = u.getProperties().getProperty(UserDirectoryService.WORKING_PLACE_PROPERTY);
+		this.position = u.getProperties().getProperty(UserDirectoryService.POSITION_PROPERTY);
+		this.firm = u.getProperties().getProperty(UserDirectoryService.FIRM_PROPERTY);
 		this.userUuid = u.getId();
 		this.displayId = u.getDisplayId();
 		this.displayName = FormatHelper.htmlEscape(u.getDisplayName());

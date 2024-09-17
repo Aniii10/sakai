@@ -82,6 +82,11 @@ public interface UserDirectoryService extends EntityProducer
 	// A user type used for simulating other user types
 	String ROLEVIEW_USER_TYPE = "roleview";
 
+	/** User propertie names **/
+	static final String WORKING_PLACE_PROPERTY = "Working Place";
+	static final String POSITION_PROPERTY = "Position";
+	static final String FIRM_PROPERTY = "Firm";
+
 	/**
 	 * This function returns a boolean value of true/false,
 	 * depending on if the given password meets the validation criteria.

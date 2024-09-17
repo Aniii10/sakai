@@ -247,9 +247,9 @@ public class SubmissionStatusListener
         results.setAgentEid(agent.getEidString());
         results.setAgentDisplayId(agent.getDisplayIdString());
         results.setRole((String)userRoles.get(agentid));
-		results.setWorkingPlace(userDirectoryService.getUser(agentid).getProperties().getProperty("Working Place"));
-		results.setPosition(userDirectoryService.getUser(agentid).getProperties().getProperty("Position"));
-		results.setFirm(userDirectoryService.getUser(agentid).getProperties().getProperty("Firm"));
+		results.setWorkingPlace(userDirectoryService.getUser(agentid).getProperties().getProperty(userDirectoryService.WORKING_PLACE_PROPERTY));
+		results.setPosition(userDirectoryService.getUser(agentid).getProperties().getProperty(userDirectoryService.POSITION_PROPERTY));
+		results.setFirm(userDirectoryService.getUser(agentid).getProperties().getProperty(userDirectoryService.FIRM_PROPERTY));
         results.setRetakeAllowed(getRetakeAllowed(agent.getIdString(), studentGradingSummaryDataMap, retakeAssessment));
         if (useridMap.containsKey(agentid) ) {
           agents.add(results);
@@ -338,9 +338,9 @@ public class SubmissionStatusListener
       results.setAgentEid(agent.getEidString());
       results.setAgentDisplayId(agent.getDisplayIdString());
       results.setRole((String)userRoles.get(studentid));
-	  results.setWorkingPlace(userDirectoryService.getUser(studentid).getProperties().getProperty("Working Place"));
-	  results.setPosition(userDirectoryService.getUser(studentid).getProperties().getProperty("Position"));
-	  results.setFirm(userDirectoryService.getUser(studentid).getProperties().getProperty("Firm"));
+	  results.setWorkingPlace(userDirectoryService.getUser(studentid).getProperties().getProperty(userDirectoryService.WORKING_PLACE_PROPERTY));
+	  results.setPosition(userDirectoryService.getUser(studentid).getProperties().getProperty(userDirectoryService.POSITION_PROPERTY));
+	  results.setFirm(userDirectoryService.getUser(studentid).getProperties().getProperty(userDirectoryService.FIRM_PROPERTY));
 	  results.setRetakeAllowed(getRetakeAllowed(agent.getIdString(), studentGradingSummaryDataMap, retakeAssessment));
       retakeAssessment.setStudentGradingSummaryDataMap(studentGradingSummaryDataMap);
       agents.add(results);

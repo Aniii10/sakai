@@ -92,21 +92,21 @@ public class Participant {
 	}
 	public void setWorkingPlace() throws UserNotDefinedException {
 		User user = UserDirectoryService.getUser(uniqname);
-		workingPlace = user.getProperties().getProperty("Working Place");
+		workingPlace = user.getProperties().getProperty(org.sakaiproject.user.api.UserDirectoryService.WORKING_PLACE_PROPERTY);
 	}
 	public String getPosition() {
 		return position;
 	}
 	public void setPosition() throws UserNotDefinedException {
 		User user = UserDirectoryService.getUser(uniqname);
-		position = user.getProperties().getProperty("Position");
+		position = user.getProperties().getProperty(org.sakaiproject.user.api.UserDirectoryService.POSITION_PROPERTY);
 	}
 	public String getFirm() {
 		return firm;
 	}
 	public void setFirm() throws UserNotDefinedException {
 		User user = UserDirectoryService.getUser(uniqname);
-		firm = user.getProperties().getProperty("Firm");
+		firm = user.getProperties().getProperty(org.sakaiproject.user.api.UserDirectoryService.FIRM_PROPERTY);
 	}
 
 	public String getProviderRole() {

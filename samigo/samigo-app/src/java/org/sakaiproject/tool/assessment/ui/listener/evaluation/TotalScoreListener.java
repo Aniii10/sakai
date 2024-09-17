@@ -704,9 +704,9 @@ log.debug("totallistener: firstItem = " + bean.getFirstItem());
       log.debug("testing agent getDisplayId agent.getdisplayid = " + agent.getDisplayIdString());
 
       results.setRole((String)userRoles.get(gdata.getAgentId()));
-	  results.setWorkingPlace(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty("Working Place"));
-	  results.setPosition(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty("Position"));
-	  results.setFirm(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty("Firm"));
+	  results.setWorkingPlace(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty(userDirectoryService.WORKING_PLACE_PROPERTY));
+	  results.setPosition(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty(userDirectoryService.POSITION_PROPERTY));
+	  results.setFirm(userDirectoryService.getUser(gdata.getAgentId()).getProperties().getProperty(userDirectoryService.FIRM_PROPERTY));
 
 	  List assessmentGradingAttachmentList = new ArrayList();
       assessmentGradingAttachmentList.addAll(gdata.getAssessmentGradingAttachmentList());
@@ -902,9 +902,9 @@ log.debug("totallistener: firstItem = " + bean.getFirstItem());
       results.setAgentEid(agent.getEidString());
       results.setAgentDisplayId(agent.getDisplayIdString());
       results.setRole((String)userRoles.get(studentid));
-	  results.setWorkingPlace(userDirectoryService.getUser(studentid).getProperties().getProperty("Working Place"));
-	  results.setPosition(userDirectoryService.getUser(studentid).getProperties().getProperty("Position"));
-	  results.setFirm(userDirectoryService.getUser(studentid).getProperties().getProperty("Firm"));
+	  results.setWorkingPlace(userDirectoryService.getUser(studentid).getProperties().getProperty(userDirectoryService.WORKING_PLACE_PROPERTY));
+	  results.setPosition(userDirectoryService.getUser(studentid).getProperties().getProperty(userDirectoryService.POSITION_PROPERTY));
+	  results.setFirm(userDirectoryService.getUser(studentid).getProperties().getProperty(userDirectoryService.FIRM_PROPERTY));
 		// use -1 to indicate this is an unsubmitted agent
       results.setAssessmentGradingId(Long.valueOf(-1));
       results.setForGrade(Boolean.FALSE);
