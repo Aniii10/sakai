@@ -660,12 +660,15 @@ public class GradingServiceImpl implements GradingService {
             categories.forEach(c -> {
 
                 assignments.forEach(a -> {
+                    String taskName = isGradebookGroupEnabled(fromContext)
+                            ? a.getName().substring(a.getName().indexOf('-') + 1)
+                            : a.getName();
 
                     if (StringUtils.equals(c.getName(), a.getCategoryName())) {
 
                         if (!categoriesCreated.containsKey(c.getName())) {
                             log.debug("Creando categoría: {}", c.getName());
-                            log.debug("Asignando tarea: {} a la categoría: {}", a.getName(), c.getName());
+                            log.debug("Asignando tarea: {} a la categoría: {}", taskName, c.getName());
                             // create category
                             Long categoryId = null;
                             try {
@@ -689,18 +692,18 @@ public class GradingServiceImpl implements GradingService {
 
                         // create the assignment for the current category
                         try {
-                            Long newId = createAssignmentForCategory(gradebook.getId(), categoriesCreated.get(c.getName()), a.getName(), a.getPoints(),
+                            Long newId = createAssignmentForCategory(gradebook.getId(), categoriesCreated.get(c.getName()), taskName, a.getPoints(),
                                     a.getDueDate(), !a.getCounted(), a.getReleased(), a.getExtraCredit(), a.getCategorizedSortOrder(), null);
                             transversalMap.put("gb/"+a.getId(),"gb/"+newId);
                         } catch (final ConflictingAssignmentNameException e) {
                             // assignment already exists. Could be from a merge.
-                            log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
+                            log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", taskName);
                         } catch (final Exception ex) {
-                            log.warn("GradebookAssignment: exception {} trying to create {} in target site. Skipping creation.", ex.getMessage(), a.getName());
+                            log.warn("GradebookAssignment: exception {} trying to create {} in target site. Skipping creation.", ex.getMessage(), taskName);
                         }
 
                         // record that we have created this assignment
-                        assignmentsCreated.add(a.getName());
+                        assignmentsCreated.add(taskName);
                     }
                 });
             });
@@ -719,21 +722,30 @@ public class GradingServiceImpl implements GradingService {
         }
         List<Assignment> assignmentsTo = getAssignments(gradebook.getUid(), toGradebookUid, SortType.SORT_BY_NONE);
         // create any remaining assignments that have no categories
-        assignments.removeIf(a -> assignmentsCreated.contains(a.getName()));
+        assignments.removeIf(a -> {
+            String taskName = isGradebookGroupEnabled(fromContext)
+                    ? (a.getName().contains("-") ? a.getName().substring(a.getName().indexOf('-') + 1) : a.getName())
+                    : a.getName();
+
+            return assignmentsCreated.contains(taskName);
+        });
         assignments.forEach(a -> {
+            String taskName = isGradebookGroupEnabled(fromContext)
+                    ? a.getName().substring(a.getName().indexOf('-') + 1)
+                    : a.getName();
 
             try {
-                if (!assignmentExistsInList(assignmentsTo, a.getName())) {
-                    Long newId = createAssignment(gradebook.getId(), a.getName(), a.getPoints(), a.getDueDate(), !a.getCounted(), a.getReleased(), a.getExtraCredit(), a.getSortOrder(), null);
+                if (!assignmentExistsInList(assignmentsTo, taskName)) {
+                    Long newId = createAssignment(gradebook.getId(), taskName, a.getPoints(), a.getDueDate(), !a.getCounted(), a.getReleased(), a.getExtraCredit(), a.getSortOrder(), null);
                     transversalMap.put("gb/"+a.getId(),"gb/"+newId);
                 } else {
-                    log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
+                    log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", taskName);
                 }
             } catch (final ConflictingAssignmentNameException e) {
                 // assignment already exists. Could be from a merge.
-                log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", a.getName());
+                log.debug("GradebookAssignment: {} already exists in target site. Skipping creation.", taskName);
             } catch (final Exception ex) {
-                log.warn("GradebookAssignment: exception {} trying to create {} in target site. Skipping creation.", ex.getMessage(), a.getName());
+                log.warn("GradebookAssignment: exception {} trying to create {} in target site. Skipping creation.", ex.getMessage(), taskName);
             }
         });
 

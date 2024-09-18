@@ -132,6 +132,7 @@ import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.ImportException;
 import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.grading.api.GradingService;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.importer.api.ImportDataSource;
 import org.sakaiproject.importer.api.ImportService;
@@ -854,6 +855,7 @@ public class SiteAction extends PagedResourceActionII {
 	private UserDirectoryService userDirectoryService;
 	private UserNotificationProvider userNotificationProvider;
 	private UserTimeService userTimeService;
+	private GradingService gradingService;
 
 	public SiteAction() {
 		affiliatedSectionProvider = ComponentManager.get(AffiliatedSectionProvider.class);
@@ -892,6 +894,7 @@ public class SiteAction extends PagedResourceActionII {
 		userDirectoryService = ComponentManager.get(UserDirectoryService.class );
 		userNotificationProvider = ComponentManager.get(UserNotificationProvider.class);
 		userTimeService = ComponentManager.get(UserTimeService.class);
+		gradingService = ComponentManager.get(GradingService.class);
 
 		importService = org.sakaiproject.importer.cover.ImportService.getInstance();
 		comparator_locale = rb.getLocale();
@@ -3133,6 +3136,7 @@ public class SiteAction extends PagedResourceActionII {
 			
 			// set the flag for the UI
 			context.put("addMissingTools", addMissingTools);
+			context.put("isGradebookGroupEnabled", gradingService.isGradebookGroupEnabled(site.getId()));
 			
 			context.put("importSites", state.getAttribute(STATE_IMPORT_SITES));
 			context.put("importSitesTools", state
@@ -3253,6 +3257,7 @@ public class SiteAction extends PagedResourceActionII {
 						
 			// set the flag for the UI
 			context.put("addMissingTools", addMissingTools);
+			context.put("isGradebookGroupEnabled", gradingService.isGradebookGroupEnabled(site.getId()));
 
 			context.put("importSites", state.getAttribute(STATE_IMPORT_SITES));
 			context.put("importOptions", importableToolsWithOptions);

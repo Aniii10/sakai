@@ -372,8 +372,11 @@ public class GradebookNgEntityProducer implements EntityProducer, EntityTransfer
 
 							List<Assignment> assignmentsFrom = gradingService.getAssignments(gradebookGroupFrom.getUid(), fromContext, SortType.SORT_BY_NONE);
 
-							Map<String, String> transfer = gradingService.transferGradebook(gradebookInfoFrom, assignmentsFrom, toContext, fromContext);
-
+							assignmentsFrom.forEach(assignment -> {
+								String newAssigmentName = gradebookGroupFrom.getName() + "/" + groupNameFrom + "-" + assignment.getName();
+								assignment.setName(newAssigmentName);
+							});
+							Map<String, String> transfer = gradingService.transferGradebook(gradebookInfoFrom, assignmentsFrom, gradebookGroupTo.getUid(), fromContext);
 							resultGradebookTransfer.putAll(transfer);
 						}
 					}
@@ -393,18 +396,53 @@ public class GradebookNgEntityProducer implements EntityProducer, EntityTransfer
 	public Map<String, String> transferCopyEntities(String fromContext, String toContext, List<String> ids, List<String> options, boolean cleanup) {
 
 		if (cleanup == true) {
+			if (!gradingService.isGradebookGroupEnabled(fromContext)) {
+				final Gradebook gradebook = (Gradebook) this.gradingService.getGradebook(toContext, toContext);
 
-			final Gradebook gradebook = (Gradebook) this.gradingService.getGradebook(toContext, toContext);
+				// remove assignments in 'to' site
+				final List<Assignment> assignments = this.gradingService.getAssignments(gradebook.getUid(), toContext, SortType.SORT_BY_NONE);
+				assignments.forEach(a -> this.gradingService.removeAssignment(a.getId()));
 
-			// remove assignments in 'to' site
-			final List<Assignment> assignments = this.gradingService.getAssignments(gradebook.getUid(), toContext, SortType.SORT_BY_NONE);
-			assignments.forEach(a -> this.gradingService.removeAssignment(a.getId()));
+				// remove categories in 'to' site
+				final List<CategoryDefinition> categories = this.gradingService.getCategoryDefinitions(gradebook.getUid(), toContext);
+				categories.forEach(c -> this.gradingService.removeCategory(c.getId()));
+			} else {
+				try {
+					Site siteFrom = siteService.getSite(fromContext);
+					Collection<Group> groupListFrom = siteFrom.getGroups();
 
-			// remove categories in 'to' site
-			final List<CategoryDefinition> categories = this.gradingService.getCategoryDefinitions(gradebook.getUid(), toContext);
-			categories.forEach(c -> this.gradingService.removeCategory(c.getId()));
+					Site siteTo = siteService.getSite(toContext);
+					Collection<Group> groupListTo = siteTo.getGroups();
+
+					groupListFrom.forEach(groupFrom -> {
+						String groupNameFrom = groupFrom.getTitle();
+
+						Optional<Group> opGroup = groupListTo.stream()
+								.filter(groupTo -> groupTo.getTitle().equals(groupNameFrom))
+								.findFirst();
+
+						Gradebook gradebookGroupFrom = gradingService.getGradebook(groupFrom.getId(), fromContext);
+
+						if (opGroup.isPresent() && gradebookGroupFrom != null) {
+							Group groupTo = opGroup.get();
+
+							Gradebook gradebookGroupTo = gradingService.getGradebook(groupTo.getId(), toContext);
+
+							if (gradebookGroupTo != null) {
+								List<Assignment> groupAssignmentsTo = gradingService.getAssignments(gradebookGroupTo.getUid(), toContext, SortType.SORT_BY_NONE);
+								groupAssignmentsTo.forEach(a -> this.gradingService.removeAssignment(a.getId()));
+
+								List<CategoryDefinition> groupCategoriesTo = this.gradingService.getCategoryDefinitions(gradebookGroupTo.getUid(), toContext);
+								groupCategoriesTo.forEach(c -> this.gradingService.removeCategory(c.getId()));
+							}
+						}
+					});
+				} catch (IdUnusedException e) {
+					log.error("Error while trying to get gradebooks for site {} : {}", fromContext, e.getMessage());
+					return new HashMap<>();
+				}
+			}
 		}
-
 		// now migrate
 		return this.transferCopyEntities(fromContext, toContext, ids, null);
 	}
