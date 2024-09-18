@@ -1103,6 +1103,16 @@ $(document).ready(() => {
     Promise.all(promises).then(() => ASN.submitForm('viewForm', 'releaseGrades', null, null));
   });
 
+  const unreleaseGrades = document.getElementById("unreleaseGrades");
+  unreleaseGrades && unreleaseGrades.addEventListener("click", e => {
+
+    e.target.classList.add('noPointers');
+
+    let promises = [];
+    [...document.getElementsByTagName("sakai-rubric-student-button")].forEach(b => promises.push(b.unreleaseEvaluation()));
+    Promise.all(promises).then(() => ASN.submitForm('viewForm', 'unreleaseGrades', null, null));
+  });
+
   const releaseCommented = document.getElementById("releaseCommented");
   releaseCommented && releaseCommented.addEventListener("click", ev =>
       ASN.submitForm('viewForm', 'releaseCommented', null, null));

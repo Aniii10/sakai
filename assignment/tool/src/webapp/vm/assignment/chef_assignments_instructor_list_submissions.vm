@@ -131,6 +131,8 @@ function printView(url) {
 							#else
 								## release grades
 								<a href="#" class="assignment-item" id="releaseGrades" title="$!tlang.getString('relgrad')">$!tlang.getString('relgrad')</a>
+								## unrelease grades
+								<a href="#" class="assignment-item" id="unreleaseGrades" title="$!tlang.getString('unrelgrad')">$!tlang.getString('unrelgrad')</a>
 							#end
 						#end
 						#if ($taggable)

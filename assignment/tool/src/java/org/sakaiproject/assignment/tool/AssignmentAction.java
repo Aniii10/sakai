@@ -6395,11 +6395,14 @@ public class AssignmentAction extends PagedResourceActionII {
             case "upload":
                 doPrep_upload_all(data);
                 break;
+            case "unreleaseGrades":
+                doUnrelease_grades(data);
+                break;
             default:
         }
     } // doView_submission_list_option
 
-	public void doView_submission_list_search(RunData data)
+    public void doView_submission_list_search(RunData data)
 	{
         SessionState state = ((JetspeedRunData) data).getPortletSessionState(((JetspeedRunData) data).getJs_peid());
 
@@ -11532,6 +11535,55 @@ public class AssignmentAction extends PagedResourceActionII {
                 List<String> gradebookUids = gradingService.getGradebookUidByExternalId(associateGradebookAssignment);
                 for (String gradebookUid : gradebookUids) {
                     addAlerts(state, assignmentToolUtils.integrateGradebook(stateToMap(state), gradebookUid, aReference, associateGradebookAssignment, null, null, null, -1, null, null, "update", -1));
+                }
+            }
+        }
+    }
+
+    private void doUnrelease_grades(RunData data) {
+        if (!"POST".equals(data.getRequest().getMethod())) {
+            return;
+        }
+
+        SessionState state = ((JetspeedRunData) data).getPortletSessionState(((JetspeedRunData) data).getJs_peid());
+
+        ParameterParser params = data.getParameters();
+
+        String assignmentId = params.getString("assignmentId");
+
+        Assignment a = getAssignment(assignmentId, "doUnrelease_grades", state);
+
+        if (a != null) {
+            String aReference = AssignmentReferenceReckoner.reckoner().assignment(a).reckon().getReference();
+            List<AssignmentSubmission> submissions = getFilteredSubmitters(state, aReference);
+            for (AssignmentSubmission s : submissions) {
+                // if the submission is not already released
+                // if the assignment type is either
+                //   UNGRADED and comments have been left on the submission
+                //   GRADED and a grade exists on the submission
+                if (s.getGradeReleased()
+                        && (a.getTypeOfGrade() == Assignment.GradeType.UNGRADED_GRADE_TYPE && StringUtils.isNotBlank(s.getFeedbackComment())
+                        || ((a.getTypeOfGrade() != Assignment.GradeType.UNGRADED_GRADE_TYPE) && StringUtils.isNotBlank(s.getGrade())))) {
+                    s.setGraded(true);
+                    s.setGradeReleased(false);
+                    s.setReturned(false);
+                    s.setDateReturned(Instant.now());
+                    try {
+                        assignmentService.updateSubmission(s);
+                    } catch (PermissionException e) {
+                        log.warn("Failed to update submission [{}] while releasing grades, {}", s.getId(), e.toString());
+                    }
+                }
+            }
+
+            // add grades into Gradebook
+            String integrateWithGradebook = a.getProperties().get(NEW_ASSIGNMENT_ADD_TO_GRADEBOOK);
+            if (integrateWithGradebook != null && !integrateWithGradebook.equals(GRADEBOOK_INTEGRATION_NO)) {
+                // integrate with Gradebook
+                String associateGradebookAssignment = a.getProperties().get(PROP_ASSIGNMENT_ASSOCIATE_GRADEBOOK_ASSIGNMENT);
+                List<String> gradebookUids = gradingService.getGradebookUidByExternalId(associateGradebookAssignment);
+                for (String gradebookUid : gradebookUids) {
+                    addAlerts(state, assignmentToolUtils.integrateGradebook(stateToMap(state), gradebookUid, aReference, associateGradebookAssignment, null, null, null, -1, null, null, "remove", -1));
                 }
             }
         }

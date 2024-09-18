@@ -112,4 +112,44 @@ export class SakaiRubricStudentButton extends rubricsApiMixin(RubricsElement) {
     })
     .catch (error => console.error(error));
   }
+
+  unreleaseEvaluation() {
+
+    let url = `/api/sites/${this.siteId}/rubric-evaluations/tools/${this.toolId}/items/${this.entityId}/evaluations/${this.evaluatedItemId}`;
+    return fetch(url, { credentials: "include" })
+    .then(r => {
+
+      if (r.status === 200) {
+        return r.json();
+      }
+
+      if (r.status !== 204) {
+        throw new Error(`Network error while getting evaluation at ${url}`);
+      }
+
+      return null;
+    })
+    .then(async data => {
+
+      const evaluation = data._embedded.evaluations[0];
+      if (evaluation) {
+        evaluation.status = 1;
+        url = `/api/sites/${this.siteId}/rubric-evaluations/${evaluation.id}`;
+        await fetch(url, {
+          body: JSON.stringify(evaluation),
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          method: "PATCH",
+        })
+         .then(r => {
+
+           if (!r.ok) {
+             throw new Error("Failed to unrelease evaluation");
+           }
+         });
+      }
+    })
+    .catch (error => console.error(error));
+  }
+
 }
