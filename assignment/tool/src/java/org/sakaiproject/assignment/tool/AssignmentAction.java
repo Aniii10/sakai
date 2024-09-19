@@ -11279,7 +11279,7 @@ public class AssignmentAction extends PagedResourceActionII {
                 List<Gradebook> gbList = gradingService.getGradebookGroupInstances(siteId);
                 List<String> existingGradebookUids = gbList.stream().map(Gradebook::getUid).collect(Collectors.toList());
                 if (!existingGradebookUids.containsAll(selectedGroups)) {
-                    addAlert(state, "HAS SELECCIONADO GRUPOS SIN GRADEBOOK !!!");
+                    addAlert(state, rb.getString("selected.groups.without.gradebook"));
                 } else {
                     selectedGradebookUids.addAll(selectedGroups);
                 }
