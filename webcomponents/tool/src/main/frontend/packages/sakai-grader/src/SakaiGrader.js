@@ -399,6 +399,7 @@ export class SakaiGrader extends graderRenderingMixin(gradableDataMixin(SakaiEle
   _onRubricTotalPointsUpdated(e) {
 
     this._submission.grade = e.detail.value;
+    this._submission.totalCriterionPoints = e.detail.totalCriterionPoints;
     this.requestUpdate();
   }
 
@@ -757,6 +758,19 @@ export class SakaiGrader extends graderRenderingMixin(gradableDataMixin(SakaiEle
         this._gradedOnly = false;
     }
     this._applyFilters();
+  }
+
+  _calculateScaledGrade() {
+    if (this._submission.totalCriterionPoints) {
+      const totalRubricPointsObtained = this._submission.grade;
+      const totalRubricPoints = this._submission.totalCriterionPoints;
+      const maxGradePoint = this.gradable.maxGradePoint;
+
+      const scaledGrade = (totalRubricPointsObtained / totalRubricPoints) * maxGradePoint;
+
+      return scaledGrade.toFixed(2);
+    }
+    return this._submission.grade;
   }
 
   _resubmitDateSelected(e) {

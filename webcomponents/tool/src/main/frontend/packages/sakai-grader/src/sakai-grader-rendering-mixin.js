@@ -271,7 +271,7 @@ export const graderRenderingMixin = Base => class extends Base {
           data-user-id="${ifDefined(submitter ? submitter.id : undefined)}"
           type="text"
           class="points-input ${ifDefined(submitter ? "grader-grade-override" : "")}"
-          .value=${submitter ? submitter.overridden ? submitter.grade : "" : this._submission.grade} />
+          .value=${submitter ? submitter.overridden ? submitter.grade : "" : this._calculateScaledGrade()} />
         ${this._renderSaved()}
         ${this._renderFailed()}
         <span>(${this.i18n["grade.max"]} ${this.gradable.maxGradePoint})</span>
@@ -446,6 +446,7 @@ export const graderRenderingMixin = Base => class extends Base {
                   </div>
                 </div>
               ` : nothing}
+
 
               <div id="grader-rubric-block" class="ms-2 ${this._rubricShowing ? "d-block" : "d-none"}">
                 <sakai-rubric-grading
