@@ -864,4 +864,15 @@ public class AssignmentToolUtils {
         return false;
     }
 
+    public boolean hasPointsConversion(String assignmentId) {
+        try {
+            Optional<ToolItemRubricAssociation> rubricAssociation = rubricsService.getRubricAssociation(RubricsConstants.RBCS_TOOL_ASSIGNMENT, assignmentId);
+            if (rubricAssociation.isPresent()) {
+                return Integer.valueOf(1).equals(rubricAssociation.get().getParameters().get("pointsConversion"));
+            }
+        } catch (Exception e) {
+            log.warn("Error trying to retrieve rubrics association for assignment : {}", e.getMessage());
+        }
+        return false;
+    }
 }

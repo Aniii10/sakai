@@ -50,6 +50,7 @@ class SakaiRubricAssociation extends RubricsElement {
       associateLabel: { attribute: "associate-label", type: String },
       associateLabelDyn: { attribute: "associate-label-dyn", type: String },
       fineTunePoints: { attribute: "fine-tune-points", type: String },
+      pointsConversion: {attribute: "points-conversion", type: String},
       hideStudentPreview: { attribute: "hide-student-preview", type: String },
       studentSelfReport: { attribute: "student-self-report", type: String },
       studentSelfReportMode0: { attribute: "student-self-report-mode-0", type: String },
@@ -184,6 +185,17 @@ class SakaiRubricAssociation extends RubricsElement {
                 </div>
                 ` : ""
               }
+              <div class="checkbox">
+                <label>
+                  <input
+                    id="rbcs-config-pointsConversion"
+                    name="rbcs-config-pointsConversion"
+                    type="checkbox"
+                    ?checked=${this.selectedConfigOptions.pointsConversion}
+                    value="1"
+                    ?disabled=${this.isAssociated != 1 || this.readOnly}>${this.pointsConversion}
+                </label>
+              </div>
             </div>
         `}
         </div>

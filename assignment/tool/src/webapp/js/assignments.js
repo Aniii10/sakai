@@ -989,8 +989,10 @@ $(document).ready(() => {
     const doAssociateCheck = document.getElementById("do-associate-radio");
     const studentSelfReport = document.getElementById('rbcs-config-studentSelfReport');
     const usePeerAssessment = document.getElementById("usePeerAssessment");
+    const pointsConversion = document.getElementById('rbcs-config-pointsConversion');
 
     if(doAssociateCheck.checked) {
+      pointsConversion.disabled = false;
       //page-loading
       if (studentSelfReport.checked) {
         // We do a click to hide "peerAssessmentOptions" container
@@ -1013,11 +1015,14 @@ $(document).ready(() => {
     doAssociateCheck.addEventListener("change", function() {
         studentSelfReport.disabled = false;
         studentSelfReport.checked = false;
+        pointsConversion.disabled = false;
     });
 
     dontAssociateCheck.addEventListener("change", function() {
         usePeerAssessment.disabled = false;
         studentSelfReport.checked = false;
+        pointsConversion.disabled = true;
+        pointsConversion.checked = false;
     });
     
     //event manage

@@ -42,6 +42,8 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
     this.confirmedNotSaveFeedback = false;
     this.savedPvtNotes = true;
     this.savedFeedbackComment = true;
+    this.totalCriterionPoints = 0;
+    this.totalPointsConversion = 0;
 
     this.assignmentsI18n = {};
 
@@ -65,6 +67,7 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
       currentStudentId: { attribute: "current-student-id", type: String },
       gradableTitle: { attribute: "gradable-title", type: String },
       hasAssociatedRubric: { attribute: "has-associated-rubric", type: String },
+      pointsConversion: {attribute: "points-conversion", type: String},
       entityId: { attribute: "entity-id", type: String },
       toolId: { attribute: "tool-id", type: String },
       userListUrl: { attribute: "user-list-url", type: String },
@@ -86,6 +89,8 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
       showResubmission: { attribute: false, type: Boolean },
       isChecked: { attribute: false, type: Boolean },
       allowExtension: { attribute: false, type: Boolean },
+      totalCriterionPoints: {attribute: false, type: Number},
+      totalPointsConversion: {attribute: false, type: Number},
       totalGraded: { attribute: false, type: Number },
       totalSubmissions: { attribute: false, type: Number },
       token: { attribute: false, type: String },
@@ -354,7 +359,7 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
           data-user-id="${ifDefined(submitter ? submitter.id : undefined)}"
           type="text"
           class="points-input ${ifDefined(submitter ? "grader-grade-override" : undefined)}"
-          .value=${submitter ? (submitter.overridden ? submitter.grade : "") : this.submission.grade} />
+          .value=${submitter ? (submitter.overridden ? submitter.grade : "") : this._calculateScaledGrade()} />
         ${this.renderSaved()}
         ${this.renderFailed()}
         <span>(${this.assignmentsI18n["grade.max"]} ${this.gradable.maxGradePoint})</span>
@@ -1045,6 +1050,7 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
 
     if (this.rubricShowing) {
       this.submission.grade = e.detail.value;
+      this._submission.totalCriterionPoints = e.detail.totalCriterionPoints;
       this.requestUpdate();
     }
   }
@@ -1102,7 +1108,8 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
     formData.valid = true;
 
     this.querySelector("sakai-grader-file-picker").files.forEach((f, i) => formData.set(`attachment${i}`, f, f.name));
-    formData.set("grade", this.submission.grade);
+    formData.set("grade", this.totalPointsConversion);
+    formData.set("totalCriteriorPoints", this.totalCriteriorPoints);
     this.querySelectorAll(".grader-grade-override").forEach(el => {
       if (el?.type !== "checkbox") {
         formData.set(`grade_submission_grade_${el.dataset.userId}`, el.value);
@@ -1198,6 +1205,7 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
         const submission = new Submission(data, this.groups, this.i18n);
 
         submission.grade = formData.get("grade");
+        submission.totalCriterionPoints = formData.get("totalCriterionPoints");
 
         this.querySelector("sakai-grader-file-picker").reset();
         this.submissions.splice(this.submissions.findIndex(s => s.id === submission.id), 1, submission);
@@ -1505,6 +1513,29 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
 
     this.graderOnLeft = e.target.checked;
     this.setSetting("grader", "graderOnLeft", e.target.checked);
+  }
+
+  _calculateScaledGrade() {
+
+    if (this.pointsConversion == "false") {
+      return this._submission.grade;
+    }
+
+    if (this._submission.totalCriterionPoints || this.totalCriterionPoints) {
+      const totalRubricPointsObtained = this._submission.grade;
+      const totalRubricPoints = this._submission.totalCriterionPoints || this.totalCriterionPoints;
+
+      if (!this.totalCriterionPoints && totalRubricPoints) {
+        this.totalCriterionPoints = totalRubricPoints;
+      }
+      const maxGradePoint = this.gradable.maxGradePoint;
+
+      const scaledGrade = (totalRubricPointsObtained / totalRubricPoints) * maxGradePoint;
+      this.totalPointsConversion = scaledGrade.toFixed(2);
+
+      return this.totalPointsConversion;
+    }
+    return this._submission.grade;
   }
 
   resubmitDateSelected(e) {

@@ -433,6 +433,11 @@ export class SakaiRubricGrading extends RubricsElement {
       }, 0);
     }
 
+    this.totalCriterionPoints = this.criteria.reduce((a, c) => {
+      const maxRatingPoints = Math.max(...c.ratings.map(r => r.points));
+      return a + maxRatingPoints;
+    }, 0);
+
     // Make sure total points is not negative
     if (parseFloat(this.totalPoints) < 0) this.totalPoints = 0;
 
@@ -441,6 +446,7 @@ export class SakaiRubricGrading extends RubricsElement {
         evaluatedItemId: this.evaluatedItemId,
         entityId: this.entityId,
         value: this.totalPoints.toLocaleString(this.locale, { maximumFractionDigits: 2 }),
+        totalCriterionPoints: this.totalCriterionPoints.toLocaleString(this.locale, { maximumFractionDigits: 2 }),
       };
 
       this.dispatchEvent(new CustomEvent('total-points-updated', { detail, bubbles: true, composed: true }));

@@ -3975,6 +3975,7 @@ public class AssignmentAction extends PagedResourceActionII {
                 // Check if the assignment has a rubric associated or not
                 context.put("hasAssociatedRubric", rubricsService.hasAssociatedRubric(RubricsConstants.RBCS_TOOL_ASSIGNMENT, a.getId()));
                 context.put("rubricSelfReport", assignmentToolUtils.hasRubricSelfReview(a.getId()));
+                context.put("pointsConversion", assignmentToolUtils.hasPointsConversion(a.getId()));
 
                 //peer review
                 if (a.getAllowPeerAssessment() && a.getPeerAssessmentStudentReview() && assignmentService.isPeerAssessmentClosed(a)) {
@@ -7651,6 +7652,7 @@ public class AssignmentAction extends PagedResourceActionII {
             rubricAssociationParameters.put("hideStudentPreview", params.getString(RubricsConstants.RBCS_CONFIG + "hideStudentPreview"));
             rubricAssociationParameters.put("studentSelfReport", params.getString(RubricsConstants.RBCS_CONFIG + "studentSelfReport"));
             rubricAssociationParameters.put("studentSelfReportMode", params.getString("rbcs-multiple-options-config-studentSelfReportMode"));
+            rubricAssociationParameters.put("pointsConversion", params.getString(RubricsConstants.RBCS_CONFIG + "conversionPoints"));
             rubricAssociationMap.put("parameters", rubricAssociationParameters);
             try {
                 state.setAttribute(RUBRIC_ASSOCIATION, (new ObjectMapper()).writeValueAsString(rubricAssociationMap));

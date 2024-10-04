@@ -44,6 +44,7 @@ public interface RubricsConstants {
 	public static final String RBCS_STUDENT_SELF_REPORT = "studentSelfReport";
 	public static final String RBCS_STUDENT_SELF_REPORT_MODE = "studentSelfReportMode";
 	public static final String RBCS_HAS_ASSOCIATED_RUBRIC = "hasAssociatedRubric";
+	public static final String RBCS_CONVERSION_POINTS = "conversionPoints";
 	public static final String RBCS_ASSESSOR_ID = "assessorId";
 
     public static final String RBCS_PERMISSIONS_EVALUATOR = "rubrics.evaluator";

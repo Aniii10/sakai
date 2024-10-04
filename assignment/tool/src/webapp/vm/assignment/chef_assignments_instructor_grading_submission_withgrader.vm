@@ -17,6 +17,7 @@
         user-list-url="#toolLinkParam("$action" "doGrade_assignment" "assignmentId=$formattedText.escapeUrl($assignmentReference)")"
         current-student-id="$!submitterId"
         has-associated-rubric="$!hasAssociatedRubric"
+        points-conversion="$pointsConversion"
         #if ($!hasAssociatedRubric)
         tool-id="sakai.assignment"
         entity-id="$assignment.Id"
