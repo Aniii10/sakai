@@ -44,6 +44,7 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
     this.savedFeedbackComment = true;
     this.totalCriterionPoints = 0;
     this.totalPointsConversion = 0;
+    this.selectedRubricPoints = 0;
 
     this.assignmentsI18n = {};
 
@@ -90,6 +91,7 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
       isChecked: { attribute: false, type: Boolean },
       allowExtension: { attribute: false, type: Boolean },
       totalCriterionPoints: {attribute: false, type: Number},
+      selectedRubricPoints: {attribute: false, type: Number},
       totalPointsConversion: {attribute: false, type: Number},
       totalGraded: { attribute: false, type: Number },
       totalSubmissions: { attribute: false, type: Number },
@@ -1050,7 +1052,8 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
 
     if (this.rubricShowing) {
       this.submission.grade = e.detail.value;
-      this._submission.totalCriterionPoints = e.detail.totalCriterionPoints;
+      this.submission.totalCriterionPoints = e.detail.totalCriterionPoints;
+      this.selectedRubricPoints = e.detail.value;
       this.requestUpdate();
     }
   }
@@ -1108,8 +1111,8 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
     formData.valid = true;
 
     this.querySelector("sakai-grader-file-picker").files.forEach((f, i) => formData.set(`attachment${i}`, f, f.name));
-    formData.set("grade", this.totalPointsConversion);
-    formData.set("totalCriteriorPoints", this.totalCriteriorPoints);
+    formData.set("grade", this.pointsConversion == "false" ? this.submission.grade : this.totalPointsConversion);
+
     this.querySelectorAll(".grader-grade-override").forEach(el => {
       if (el?.type !== "checkbox") {
         formData.set(`grade_submission_grade_${el.dataset.userId}`, el.value);
@@ -1122,7 +1125,7 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
       if (!confirm(this.tr("confirm_exceed_max_grade", [this.gradable.maxGradePoint], "grader"))) {
         formData.valid = false;
       } else {
-        formData.set("grade", this.submission.grade);
+        formData.set("grade", this.pointsConversion == "false" ? this.submission.grade : this.totalPointsConversion);
       }
     }
     formData.set("feedbackText", this.submission.feedbackText);
@@ -1522,17 +1525,13 @@ export class SakaiGrader extends gradableDataMixin(SakaiElement) {
     }
 
     if (this._submission.totalCriterionPoints || this.totalCriterionPoints) {
-      const totalRubricPointsObtained = this._submission.grade;
+      const totalRubricPointsObtained = this.selectedRubricPoints;
       const totalRubricPoints = this._submission.totalCriterionPoints || this.totalCriterionPoints;
 
-      if (!this.totalCriterionPoints && totalRubricPoints) {
-        this.totalCriterionPoints = totalRubricPoints;
-      }
       const maxGradePoint = this.gradable.maxGradePoint;
 
       const scaledGrade = (totalRubricPointsObtained / totalRubricPoints) * maxGradePoint;
       this.totalPointsConversion = scaledGrade.toFixed(2);
-
       return this.totalPointsConversion;
     }
     return this._submission.grade;
