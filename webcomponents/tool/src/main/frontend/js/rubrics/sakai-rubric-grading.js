@@ -15,6 +15,7 @@ export class SakaiRubricGrading extends RubricsElement {
     this.rubric = { title: "" };
     this.criteria = [];
     this.totalPoints = 0;
+    this.scaledGradeAssigment = 0;
 
     SakaiRubricsLanguage.loadTranslations().then(r => this.i18nLoaded = r);
   }
@@ -23,6 +24,7 @@ export class SakaiRubricGrading extends RubricsElement {
 
     return {
       siteId: { attribute: "site-id", type: String },
+      maxGrade: { attribute: "max-grade", type: String },
       toolId: { attribute: "tool-id", type: String },
       entityId: { attribute: "entity-id", type: String },
       evaluatedItemId: { attribute: "evaluated-item-id", type: String },
@@ -417,10 +419,12 @@ export class SakaiRubricGrading extends RubricsElement {
   updateTotalPoints(options = { notify: true }) {
 
     console.debug("updateTotalPoints");
-
+    console.log(options);
     if (typeof options.totalPoints !== "undefined") {
       this.totalPoints = options.totalPoints;
     } else {
+      console.log("NO TENGO OPCIONES");
+      console.log(this.criteria);
       this.totalPoints = this.criteria.reduce((a, c) => {
 
         if (c.pointoverride) {
@@ -441,16 +445,44 @@ export class SakaiRubricGrading extends RubricsElement {
     // Make sure total points is not negative
     if (parseFloat(this.totalPoints) < 0) this.totalPoints = 0;
 
+    if (this.association.parameters.pointsConversion) {
+      const scaledGrade = this.calculateScaledGrade();
+      this.scaledGradeAssigment = scaledGrade;
+    }
+
     if (options.notify) {
       const detail = {
         evaluatedItemId: this.evaluatedItemId,
         entityId: this.entityId,
         value: this.totalPoints.toLocaleString(this.locale, { maximumFractionDigits: 2 }),
         totalCriterionPoints: this.totalCriterionPoints.toLocaleString(this.locale, { maximumFractionDigits: 2 }),
+        scaledGradeAssigment: this.scaledGradeAssigment,
       };
 
       this.dispatchEvent(new CustomEvent('total-points-updated', { detail, bubbles: true, composed: true }));
     }
+  }
+
+  calculateScaledGrade() {
+    if (!this.association.parameters.pointsConversion) {
+      return this.totalPoints;
+    }
+
+    if (this.totalCriterionPoints) {
+      const totalRubricPointsObtained = this.totalPoints;
+      const totalRubricPoints = this.totalCriterionPoints;
+
+      if (!this.totalCriterionPoints && totalRubricPoints) {
+        this.totalCriterionPoints = totalRubricPoints;
+      }
+      const maxGradePoint = this.maxGrade;
+
+      const scaledGrade = (totalRubricPointsObtained / totalRubricPoints) * maxGradePoint;
+      this.totalPointsConversion = scaledGrade.toFixed(2);
+
+      return this.totalPointsConversion;
+    }
+    return this.totalPoints;
   }
 
   cancel() {
