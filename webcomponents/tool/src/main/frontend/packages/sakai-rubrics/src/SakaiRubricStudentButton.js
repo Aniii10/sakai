@@ -91,8 +91,10 @@ export class SakaiRubricStudentButton extends rubricsApiMixin(RubricsElement) {
       return null;
     })
     .then(async evaluation => {
+
       if (evaluation) {
-        const evaluationStatus = 2;
+        evaluation.status = 2;
+        const evaluationStatus = evaluation.status;
         url = `/api/sites/${this.siteId}/rubric-evaluations/${evaluation.id}`;
         await fetch(url, {
           body: JSON.stringify([
