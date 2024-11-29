@@ -39,6 +39,8 @@ public class LessonItemRestBean {
     private Integer type;
     private String contentRef;
     private String title;
+    private String description;
+    private boolean isExam;
     private String format;
     private String html;
 

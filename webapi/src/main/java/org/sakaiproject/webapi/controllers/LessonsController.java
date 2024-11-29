@@ -13,6 +13,10 @@
  ******************************************************************************/
 package org.sakaiproject.webapi.controllers;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +32,7 @@ import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.condition.api.ConditionService;
 import org.sakaiproject.condition.api.model.Condition;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -37,6 +42,7 @@ import org.sakaiproject.lessonbuildertool.SimplePageItem;
 import org.sakaiproject.lessonbuildertool.api.LessonBuilderConstants;
 import org.sakaiproject.lessonbuildertool.model.SimplePageToolDao;
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.webapi.beans.LessonItemRestBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,6 +56,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestClientException;
+
+import javax.annotation.Resource;
 
 @RestController
 @Slf4j
@@ -80,6 +89,9 @@ public class LessonsController extends AbstractSakaiApiController {
 
     @Autowired
     private SecurityService securityService;
+
+    @Resource
+    private SqlService sqlService;
 
 
     // lessonId = itemId of lesson's root page
@@ -175,6 +187,107 @@ public class LessonsController extends AbstractSakaiApiController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/sites/{siteId}/lessons/preprocess", produces = "application/json")
+    public ResponseEntity<List<LessonItemRestBean>> preprocessLesson(@PathVariable String siteId, @RequestBody List<LessonItemRestBean> lessonItemRestBean) {
+
+        List<LessonItemRestBean> lessonItemRestBeansNewList = new ArrayList<>();
+        Map<Long, List<LessonItemRestBean>> groupedItems = new HashMap<>();
+
+        String toolId = lessonService.getSiteTools(siteId).stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No lesson tools found"))
+                .getPageId();
+
+        long pageId = getPageIdBySiteId(siteId, toolId);
+        if (pageId == -1) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        long lessonId = getLessonId(pageId);
+        if (lessonId == -1) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        for (LessonItemRestBean lessonItem : lessonItemRestBean) {
+
+            LessonItemRestBean preprocessedLessonItem = LessonItemRestBean.builder()
+                    .title(lessonItem.getTitle())
+                    .description(lessonItem.getDescription())
+                    .format("section")
+                    .sequence(lessonItem.getSequence())
+                    .type(SimplePageItem.BREAK)
+                    .html(lessonItem.getHtml())
+                    .pageId(pageId)
+                    .build();
+
+            lessonItemRestBeansNewList.add(preprocessedLessonItem);
+
+            groupedItems.computeIfAbsent(lessonId, k -> new ArrayList<>()).add(preprocessedLessonItem);
+        }
+
+        for (Map.Entry<Long, List<LessonItemRestBean>> entry : groupedItems.entrySet()) {
+            try {
+                List<LessonItemRestBean> lessonItems = entry.getValue();
+
+                ResponseEntity<List<LessonItemRestBean>> response = createLessonItems(siteId, entry.getKey(), lessonItems);
+
+                if (!response.getStatusCode().is2xxSuccessful()) {
+                    return ResponseEntity.badRequest().build();
+                }
+            } catch (RestClientException e) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        return ResponseEntity.ok(lessonItemRestBeansNewList);
+    }
+
+    private long getLessonId(long pageId) {
+        String query = "SELECT lsi.id FROM lesson_builder_items lsi WHERE lsi.sakaiId = ?";
+
+        try (Connection conn = sqlService.borrowConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            conn.setReadOnly(true);
+            ps.setLong(1, pageId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("id");
+                } else {
+                    return -1;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error: " + e.getMessage(), e);
+        }
+    }
+
+
+    private long getPageIdBySiteId(String siteId, String toolId) {
+        String query = "SELECT lsp.pageId FROM lesson_builder_pages lsp WHERE siteId = ? AND toolId = ?";
+
+        try (Connection conn = sqlService.borrowConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            conn.setReadOnly(true);
+            ps.setString(1, siteId);
+            ps.setString(2, toolId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("pageId");
+                } else {
+                    return -1;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error: " + e.getMessage(), e);
+        }
     }
 
     @PostMapping(value = "/sites/{siteId}/lessons/{lessonId}/items/bulk", produces = MediaType.APPLICATION_JSON_VALUE)
