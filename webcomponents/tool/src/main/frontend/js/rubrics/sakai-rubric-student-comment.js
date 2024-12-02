@@ -25,6 +25,7 @@ export class SakaiRubricStudentComment extends RubricsElement {
         html: true,
         title: () =>  this.criterion.title,
         placement: "auto",
+        template: '<div class="popover rubric-comment-body" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-container-content-rubrics"><div class="popover-content"></div></div></div>'
       });
     });
   }
