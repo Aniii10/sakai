@@ -15,6 +15,11 @@
 									<span wicket:id="courseGrade">B+</span>
 								</span>
 								<a href="javascript:void(0);" class="gb-summary-grade-stats pull-right" wicket:message="title:studentsummary.gradebookitem.gradebookstats" wicket:id="courseGradeStatsLink"></a>
+								<a href="javascript:void(0);" class="compare-grades-link" style="margin-left: 5px; font-weight: bold;"
+								   wicket:id="courseGradeComparisonLink"
+								   wicket:message="title:studentsummary.gradebookitem.compare.title">
+									<wicket:message key="studentsummary.gradebookitem.compare" />
+								</a>
 							</div>
 						</div>
 					</div>
@@ -26,6 +31,7 @@
 				<wicket:message key="no-assignments.label" />
 			</div>
 		</div>
+		<div wicket:id="compareGradesCourseWindow"></div>
 		<div wicket:id="statsWindow"></div>
 	</wicket:panel>
 </body>

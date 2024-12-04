@@ -114,6 +114,8 @@ public class StudentGradeSummaryGradesPanel extends BasePanel {
 		Map<String, CategoryDefinition> categoriesMap = Collections.emptyMap();
 		final ModalWindow statsWindow = new ModalWindow("statsWindow");
 		add(statsWindow);
+		final ModalWindow compareGradesCourseWindowWindow = new ModalWindow("compareGradesCourseWindow");
+		add(compareGradesCourseWindowWindow);
 
 		// if gradebook release setting disabled, no work to do
 		if (this.isAssignmentsDisplayed) {
@@ -196,6 +198,41 @@ public class StudentGradeSummaryGradesPanel extends BasePanel {
 			}
 		};
 		addOrReplace(courseGradePanel);
+
+		final GbAjaxLink compareLink = new GbAjaxLink("courseGradeComparisonLink") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				final java.util.List<String> studentUuids = businessService.getGradeableUsers(currentGradebookUid, currentSiteId, null);
+				final Map<String, CourseGrade> allCourseGrades = businessService.getCourseGrades(currentGradebookUid, currentSiteId, studentUuids, null);;
+
+
+				for (Map.Entry<String, CourseGrade> entry : allCourseGrades.entrySet()) {
+					CourseGrade courseGrade = entry.getValue();
+					String formattedGrade = courseGradeFormatter.format(courseGrade);
+
+					courseGrade.setFormattedGrade(formattedGrade);
+				}
+
+				CourseGradeComparisonPanel scgp = new CourseGradeComparisonPanel(
+						compareGradesCourseWindowWindow.getContentId(),
+						Model.ofMap(allCourseGrades),
+						compareGradesCourseWindowWindow
+				);
+				scgp.setCurrentGradebookAndSite(currentGradebookUid, currentSiteId);
+				compareGradesCourseWindowWindow.setContent(scgp);
+				compareGradesCourseWindowWindow.show(target);
+			}
+
+			@Override
+			public boolean isVisible() {
+				return getSettings().isAllowStudentsToCompareGrades() &&
+						getUserRole() == GbRole.STUDENT;
+			}
+		};
+		courseGradePanel.add(compareLink);
 
 		// course grade, via the formatter
 		final CourseGrade courseGrade = this.businessService.getCourseGrade(currentGradebookUid, currentSiteId, userId);

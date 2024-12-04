@@ -37,6 +37,7 @@ public class CourseGrade implements Serializable {
 	private Double pointsEarned;
 	private Double totalPointsPossible;
 	private Date dateRecorded;
+	private String formattedGrade;
 
 	public CourseGrade() {
 		//
@@ -92,6 +93,14 @@ public class CourseGrade implements Serializable {
 
 	public void setPointsEarned(final Double pointsEarned) {
 		this.pointsEarned = pointsEarned;
+	}
+
+	public String getFormattedGrade() {
+		return formattedGrade;
+	}
+
+	public void setFormattedGrade(String formattedGrade) {
+		this.formattedGrade = formattedGrade;
 	}
 
 	/**
