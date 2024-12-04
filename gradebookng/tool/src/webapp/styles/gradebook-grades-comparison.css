@@ -11,11 +11,29 @@
   font-weight: 600;
 }
 
+#studentGradesComparisonCourse-ModalContent .studentGradesComparisonCourse-Header {
+  margin: 0 0 15px 3px;
+}
+
+#studentGradesComparisonCourse-ModalContent .studentGradesComparisonCourse-Header span {
+  color: var(--sakai-primary-color-1);
+  font-weight: 600;
+}
+
 #studentGradesComparison-ModalContent .studentGradesComparison-TableContainer .table .comparing-current-user-row {
   background-color: var(--sakai-active-color-1);
 }
 
 #studentGradesComparison-ModalContent .studentGradesComparison-TableContainer .table .comparing-current-user-row td {
+  font-weight: bold;
+  background: none;
+}
+
+#studentGradesComparisonCourse-ModalContent .studentGradesComparisonCourse-TableContainer .table .comparing-current-user-row {
+  background-color: var(--sakai-active-color-1);
+}
+
+#studentGradesComparisonCourse-ModalContent .studentGradesComparisonCourse-TableContainer .table .comparing-current-user-row td {
   font-weight: bold;
   background: none;
 }

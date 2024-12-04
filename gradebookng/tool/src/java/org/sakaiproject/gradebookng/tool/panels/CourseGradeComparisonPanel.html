@@ -3,8 +3,8 @@
 
 <body>
 <wicket:panel>
-    <div id="studentGradesComparison-ModalContent">
-        <div class="studentGradesComparison-Header">
+    <div id="studentGradesComparisonCourse-ModalContent">
+        <div class="studentGradesComparisonCourse-Header">
             <span>
                <wicket:message key="comparegrades.modal.subtitle.label" />
             </span>
@@ -44,9 +44,7 @@
                 row.appendChild(gradeCell);
 
                 if (rowData.isCurrentUser) {
-                    row.style.fontWeight = 'bold';
-                    studentCell.style.backgroundColor = 'var(--sakai-active-color-1)';
-                    gradeCell.style.backgroundColor = 'var(--sakai-active-color-1)';
+                    row.className = 'comparing-current-user-row';
                 }
 
                 tableBody.appendChild(row);
